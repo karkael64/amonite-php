@@ -12,13 +12,13 @@
  1. Easy paradigm, 
  2. Soft framework, 
  3. Easy installation,
- 4. 3 Steps document sending
- 5. Follow HTTP Standards
+ 4. 3 Steps document sending and
+ 5. Follow HTTP Standards.
 
 ## Why would you NOT use Amonite-PHP
  1. You need heavy control system, 
- 3. You don't trust your colleagues
- 2. Expensive tool are most qualitative
+ 3. You don't trust your colleagues and
+ 2. Expensive tool are most qualitative.
 
 # Start with Amonite-PHP
  All Amonite engine is archived as a PHAR file. Put it on root, or any where :
@@ -41,11 +41,12 @@
  });
  ```
  
- (What does default config do ?)[#]
+ [What does default config do ?](#)
 
 # Enhance Amonite-PHP
  Amonite default config uses Throwable, Answerable, Request, Response and CustomException. 
  
+## Document / Component model
  Then you can enhance the engine by Document / Component model. In example :
  ```
  <?php //// File : /templates/documents/IndexDocument.php
@@ -119,8 +120,10 @@
  return new IndexDocument;
 
  ```
+ 
+## Database Model / ModelBSON / ModelPDO model
 
 # Documentation & References
 
-(Documentation & References)[#]
+[Documentation & References](#)
 
