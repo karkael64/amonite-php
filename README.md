@@ -41,7 +41,7 @@
  });
  ```
  
- [What does default config do ?](#)
+ [What does default config do ?](how_it_works.md#amonite-php-particularly)
 
 ## Enhance Amonite-PHP
  Amonite default config uses Throwable, Answerable, Request, Response and CustomException. 
