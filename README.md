@@ -1,26 +1,26 @@
 # Amonite 
  Amonite is a web client-side (JS[not yet]) and server-side (PHP and NodeJS[not yet]) engine. It is an engine that complies with HTTP standards, lightweight, easy to use. It's an engine that lets you decide how the program should go forward.
 
-# Amonite-PHP
+## Amonite-PHP
  Amonite is a good PHP engine :
  - with NoSQL or PDO, 
  - with torque Request / Controller, 
  - with Document / Component couple and 
  - with Throwable / Answerable response easy to use.
 
-## Why would you use Amonite-PHP
+### Why would you use Amonite-PHP
  1. Easy paradigm, 
  2. Soft framework, 
  3. Easy installation,
  4. 3 Steps document sending and
  5. Follow HTTP Standards.
 
-## Why would you NOT use Amonite-PHP
+### Why would you NOT use Amonite-PHP
  1. You need heavy control system, 
  3. You don't trust your colleagues and
  2. Expensive tool are most qualitative.
 
-# Start with Amonite-PHP
+## Start with Amonite-PHP
  All Amonite engine is archived as a PHAR file. Put it on root, or any where :
  `/amonite.phar`
  
@@ -43,13 +43,15 @@
  
  [What does default config do ?](#)
 
-# Enhance Amonite-PHP
+## Enhance Amonite-PHP
  Amonite default config uses Throwable, Answerable, Request, Response and CustomException. 
  
-## Answerable file : Document / Component model
+### Answerable file : Document / Component model
  Then you can enhance the engine by Document / Component model. In example :
+ 
+__File : /templates/documents/IndexDocument.php__
  ```
- <?php //// File : /templates/documents/IndexDocument.php
+ <?php
  
  Request::i()->env->components = ROOT . "/templates/components";
  Request::getComponent( "Nav" );
@@ -74,8 +76,9 @@
  }
  ```
  
+__File : /templates/components/NavComponent.php__
  ```
- <?php //// FILE : /templates/components/NavComponent.php
+ <?php
  
  class NavComponent extends Component {
  
@@ -109,8 +112,9 @@
  }
  ```
 
+__File : /theme/main/index.html.php__
  ```
- <?php //// FILE : /theme/main/index.html.php
+ <?php
  
  Request::i()->env->documents = ROOT . "/theme/main";
  Request::getDocument( "Index" );
@@ -121,9 +125,9 @@
 
  ```
  
-## Database management : ModelBSON / ModelPDO model
+### Database management : ModelBSON / ModelPDO model
 
-# Documentation & References
+## Documentation & References
 
 [Documentation & References](#)
 
