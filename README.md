@@ -47,7 +47,7 @@
  Amonite default config uses Throwable, Answerable, Request, Response and CustomException. 
  
 ### Answerable file : Document / Component model
- Then you can enhance the engine by Document / Component model. In example :
+ You can enhance the engine with Document / Component model or you can create any class that extends `Content` class or implements `Answerable` interface. In example :
  
 __File : /templates/documents/IndexDocument.php__
  ```
@@ -126,6 +126,19 @@ __File : /theme/main/index.html.php__
  ```
  
 ### Database management : ModelBSON / ModelPDO model
+ You can enhance the engine with ModelBSON / ModelPDO model or you can create any class that implements `Model` interface. Use one of these Model, then  In example :
+ ```
+ interface Model {
+ 
+     public function __construct( $name = "" );
+ 
+     public function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ); // return array of items
+     public function count( $where = array(), $limit = 0, $start_at = 0 ); // return integer count
+     public function remove( $where = array(), $limit = 0, $start_at = 0 ); // return array of items
+     public function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ); // return array of items items
+     public function insert( $value = array() ); // return item
+ }
+ ```
 
 ## Documentation & References
 
