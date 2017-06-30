@@ -46,7 +46,7 @@
 # Enhance Amonite-PHP
  Amonite default config uses Throwable, Answerable, Request, Response and CustomException. 
  
-## Document / Component model
+## Answerable file : Document / Component model
  Then you can enhance the engine by Document / Component model. In example :
  ```
  <?php //// File : /templates/documents/IndexDocument.php
@@ -121,7 +121,7 @@
 
  ```
  
-## Database Model / ModelBSON / ModelPDO model
+## Database management : ModelBSON / ModelPDO model
 
 # Documentation & References
 
