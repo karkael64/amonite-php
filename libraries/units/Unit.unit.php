@@ -10,6 +10,6 @@ return new Unit( "Unit", function( Unit $unit ){
 		->expectClassHasMethod( "Unit", "log", "Unit class has log function." )
 		->expectClassHasMethod( "Unit", "assert", "Unit class has assert function." )
 		->expectClassHasMethod( "Unit", "expect", "Unit class has expect function." )
-		;
+	;
 });
 

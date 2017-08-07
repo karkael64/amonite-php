@@ -1,5 +1,5 @@
 # Amonite 
- Amonite is a web client-side (JS[not yet]) and server-side (PHP and NodeJS[not yet]) engine. It is an engine that complies with HTTP standards, lightweight, easy to use. It's an engine that lets you decide how the program should go forward.
+ Amonite is a web client-side ([JS](#not-yet)) and server-side (PHP and [NodeJS](#not-yet)) engine. It is an engine that complies with HTTP standards, lightweight, easy to use. It's an engine that lets you decide how the program should go forward.
 
 ## Amonite-PHP
  Amonite is a good PHP engine :

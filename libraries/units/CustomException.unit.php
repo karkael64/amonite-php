@@ -1,13 +1,12 @@
 <?php
 
 Request::getLibrary( "Unit" );
-Request::getLibrary( "CustomException" );
 
 return new Unit( "CustomException", function( Unit $unit ){
 
-	$unit->log( get_declared_classes(), "Declared classes" );
+	Request::getLibrary( "CustomException" );
 
-	$unit->section( "Classes are set", function( $unit ){
+	$unit->section( "Classes are set", function( Unit $unit ){
 
 		$unit
 			->expectClassExists( "CustomException", "CustomException class exists." )
@@ -27,7 +26,16 @@ return new Unit( "CustomException", function( Unit $unit ){
 			->expectClassExists( "DeprecatedException", "DeprecatedException class exists." )
 			->expectClassExists( "UserDeprecatedException", "UserDeprecatedException class exists." )
 			->expectClassExists( "FatalException", "FatalException class exists." )
-			->expectClassExists( "TypeException", "TypeException class exists." );
+			->expectClassExists( "TypeException", "TypeException class exists." )
+		;
+	});
+
+	$unit->section( "", function( Unit $unit ){
+
+		$unit
+			->assert( CustomException::isset_error_handler(), "CustomException error handler should be already set." )
+			->assert( CustomException::isset_fatal_handler(), "CustomException fatal handler should be already set." )
+		;
 	});
 });
 
