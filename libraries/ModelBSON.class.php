@@ -224,6 +224,8 @@ if( !class_exists( "ModelBSON" ) ) {
 		}
 
 
+		// CONDITIONS and, or, between, in
+
 		const KEY_AND = "&and";
 		const KEY_OR = "&or";
 		const KEY_BETWEEN = "&between";

@@ -15,8 +15,9 @@ if( !class_exists( "UnitComponent" ) ) {
 
 			$all = new Unit( "Unit tests" );
 
-			$all->section( Request::getLibrary( "units/CustomException.unit.php" ) );
 			$all->section( Request::getLibrary( "units/Unit.unit.php" ) );
+			$all->section( Request::getLibrary( "units/CustomException.unit.php" ) );
+			$all->section( Request::getLibrary( "units/Component.unit.php" ) );
 
 			echo $all->toMime( $this->mime );
 			//echo "<pre>" . $all->toString() . "</pre>";

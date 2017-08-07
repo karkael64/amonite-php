@@ -1,0 +1,81 @@
+.unit.section {
+    display: block;
+    border: 1px solid #888;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    background-color: #0d0;
+}
+.unit.section.errors {
+    background-color: #ea4009;
+}
+
+.unit.section > .sections > .unit.section {
+    margin: 2em;
+}
+
+.unit.section > h2 {
+    display: block;
+    padding: 1em 2em;
+    margin: 0;
+}
+
+.unit.section > .lines > .line {
+    display: block;
+    font-family: "Lucida Console", serif;
+    padding: 12px 20px;
+    font-size: 0;
+}
+
+.unit.section > h2,
+.unit.section > .lines > .line {
+    box-shadow: inset 0 40px 40px -40px rgba(255,255,255,.5);
+}
+
+
+.unit.section > .lines > .line > span {
+    display: inline-block;
+    font-size: 1rem;
+    margin: 0 8px;
+    vertical-align: middle;
+}
+
+
+.unit.section > .lines > .line.true {
+    background-color: #0d0;
+}
+
+.unit.section > .lines > .line.false {
+    background-color: #ea4009;
+}
+
+.unit.section > .lines > .line.log {
+    background-color: #999;
+}
+
+.unit.section > .lines > .line > .time {
+    min-width: 164px;
+}
+.unit.section > .lines > .line > .caller {
+    min-width: 212px;
+    text-align: center;
+}
+.unit.section > .lines > .line > .value {
+    min-width: 200px;
+    text-align: center;
+    font-weight: bold;
+}
+.unit.section > .lines > .line > .description {
+    font-style: italic;
+}
+
+@media ( max-width: 500px ) {
+
+    .unit.section > .lines > .line {
+        text-align: center;
+    }
+
+    .unit.section > .lines > .line > span {
+        text-align: center;
+        display: block;
+    }
+}

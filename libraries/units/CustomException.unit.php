@@ -30,7 +30,7 @@ return new Unit( "CustomException", function( Unit $unit ){
 		;
 	});
 
-	$unit->section( "", function( Unit $unit ){
+	$unit->section( "Test", function( Unit $unit ){
 
 		$unit
 			->assert( CustomException::isset_error_handler(), "CustomException error handler should be already set." )

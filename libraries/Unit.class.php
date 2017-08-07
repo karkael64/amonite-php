@@ -8,9 +8,9 @@ if( !class_exists( "Unit" ) ) {
 
 		/**
 		 * Unit constructor.
-		 * @param $name
+		 * @param string $name
+         * @param callable $fn
 		 */
-
 		function __construct( $name, $fn = null ) {
 
 			$this->name = $name;
@@ -32,7 +32,6 @@ if( !class_exists( "Unit" ) ) {
 		 * @return Unit
 		 * @throws Exception
 		 */
-
 		function section( $name, $fn = null ) {
 
 			if( is_string( $name ) && strlen( $name ) ) {
@@ -60,6 +59,7 @@ if( !class_exists( "Unit" ) ) {
 		}
 
 		/**
+         * @param bool $errors_only
 		 * @return array
 		 */
 		function toArray( $errors_only = false ) {
@@ -341,7 +341,7 @@ if( !class_exists( "Unit" ) ) {
 					$test = true;
 					return $this->customExpect( $title, $test, "No throw", true, to_string( $description ), array( $class, to_string( $test ) ) );
 				} catch( Throwable $ex ) {
-					return $this->makeLine( $title, false, "Has thrown an Exception !", to_string( $description ), array( $class, to_string( false ) ) );
+					return $this->makeLine( $title, false, "Has thrown an Exception !", $ex->getMessage(), array( $class, to_string( false ) ) );
 				}
 			}
 		}
@@ -369,7 +369,16 @@ if( !class_exists( "Unit" ) ) {
 
 		// MAIN PROTECTED FUNCTIONS
 
-		protected function makeLine( $caller, $value = false, $print = "", $description = "", $classes = "", $time = null, $class = null, $function = null, $file = null, $line = null ) {
+        /**
+         * @param string $caller
+         * @param mixed $value
+         * @param string $print
+         * @param string $description
+         * @param string $classes
+         * @param double $time
+         * @return Unit $this
+         */
+		protected function makeLine( $caller, $value = false, $print = "", $description = "", $classes = "", $time = null ) {
 
 			$time = $this->getTimestampDiff( $time );
 			$trace = $this->getTrace();
