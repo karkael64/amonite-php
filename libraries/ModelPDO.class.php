@@ -35,6 +35,25 @@ if( !class_exists( "ModelPDO" ) ) {
 			return null;
 		}
 
+		public function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
+
+			$pdo = self::$pdo;
+			if( $pdo instanceof PDO ) {
+
+				$req = "SELECT " . $this->getFields( $fields ) . " "
+					. "FROM " . $pdo->quote( $this->tableName ) . " "
+					. $this->getWhere( $where ) . " "
+					. $this->getLimit( 1, $start_at ) . ";";
+
+				$query = $pdo->prepare( $req );
+				$query->execute();
+				$rows = $query->fetchAll( PDO::FETCH_ASSOC );
+				return isset( $rows[ 0 ] ) ? $rows[ 0 ] : null;
+			}
+
+			return null;
+		}
+
 		public function count( $where = array(), $limit = 0, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
