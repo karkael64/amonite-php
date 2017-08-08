@@ -4,28 +4,22 @@ if( !class_exists( "ModelPDO" ) ) {
 
 	class ModelPDO implements Model {
 
-		protected $tableName = "";
 		protected static $pdo = null;
 
 		static function setPDO( PDO $pdo ) {
 			self::$pdo = $pdo;
 		}
 
-		public function __construct( $name = null ) {
 
-			$this->tableName = file_basename( ( is_string( $name ) and strlen( $name ) ) ? $name : get_class( $this ), "Model" );
-		}
-
-
-		public function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ) {
+		static public function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO ) {
 
-				$req = "SELECT " . $this->getFields( $fields ) . " "
-					. "FROM " . $pdo->quote( $this->tableName ) . " "
-					. $this->getWhere( $where ) . " "
-					. $this->getLimit( $limit, $start_at ) . ";";
+				$req = "SELECT " . self::getFields( $fields ) . " "
+					. "FROM " . $pdo->quote( self::getName() ) . " "
+					. self::getWhere( $where ) . " "
+					. self::getLimit( $limit, $start_at ) . ";";
 
 				$query = $pdo->prepare( $req );
 				$query->execute();
@@ -35,15 +29,15 @@ if( !class_exists( "ModelPDO" ) ) {
 			return null;
 		}
 
-		public function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
+		static public function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO ) {
 
-				$req = "SELECT " . $this->getFields( $fields ) . " "
-					. "FROM " . $pdo->quote( $this->tableName ) . " "
-					. $this->getWhere( $where ) . " "
-					. $this->getLimit( 1, $start_at ) . ";";
+				$req = "SELECT " . self::getFields( $fields ) . " "
+					. "FROM " . $pdo->quote( self::getName() ) . " "
+					. self::getWhere( $where ) . " "
+					. self::getLimit( 1, $start_at ) . ";";
 
 				$query = $pdo->prepare( $req );
 				$query->execute();
@@ -54,15 +48,15 @@ if( !class_exists( "ModelPDO" ) ) {
 			return null;
 		}
 
-		public function count( $where = array(), $limit = 0, $start_at = 0 ) {
+		static public function count( $where = array(), $limit = 0, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO ) {
 
 				$req = "SELECT count( * ) as c "
-					. "FROM " . $pdo->quote( $this->tableName ) . " "
-					. $this->getWhere( $where ) . " "
-					. $this->getLimit( $limit, $start_at ) . ";";
+					. "FROM " . $pdo->quote( self::getName() ) . " "
+					. self::getWhere( $where ) . " "
+					. self::getLimit( $limit, $start_at ) . ";";
 
 				$query = $pdo->prepare( $req );
 				$query->execute();
@@ -74,14 +68,14 @@ if( !class_exists( "ModelPDO" ) ) {
 		}
 
 
-		public function remove( array $where, $limit = 0, $start_at = 0 ) {
+		static public function remove( array $where, $limit = 0, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $where ) ) {
 
-				$req = "DELETE FROM " . $pdo->quote( $this->tableName ) . " "
-					. $this->getWhere( $where ) . " "
-					. $this->getLimit( $limit, $start_at ) . ";";
+				$req = "DELETE FROM " . $pdo->quote( self::getName() ) . " "
+					. self::getWhere( $where ) . " "
+					. self::getLimit( $limit, $start_at ) . ";";
 
 				return $pdo->exec( $req );
 			}
@@ -89,14 +83,14 @@ if( !class_exists( "ModelPDO" ) ) {
 			return null;
 		}
 
-		public function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
+		static public function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $value ) ) {
 
-				$req = "UPDATE " . $pdo->quote( $this->tableName ) . " "
-					. "SET " . $this->getUpdateValues( $value ) . " "
-					. $this->getWhere( $where ) . ";";
+				$req = "UPDATE " . $pdo->quote( self::tableName ) . " "
+					. "SET " . self::getUpdateValues( $value ) . " "
+					. self::getWhere( $where ) . ";";
 
 				return $pdo->exec( $req );
 			}
@@ -104,13 +98,13 @@ if( !class_exists( "ModelPDO" ) ) {
 			return null;
 		}
 
-		public function insert( $value = array() ) {
+		static public function insert( $value = array() ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $value ) ) {
 
-				$req = "INSERT INTO " . $pdo->quote( $this->tableName ) . " "
-					. "VALUES " . $this->getInsertValues( $value ) . ";";
+				$req = "INSERT INTO " . $pdo->quote( self::getName() ) . " "
+					. "VALUES " . self::getInsertValues( $value ) . ";";
 
 				return $pdo->exec( $req );
 			}
@@ -119,7 +113,7 @@ if( !class_exists( "ModelPDO" ) ) {
 		}
 
 
-		protected function getInsertValues( $values ) {
+		static protected function getInsertValues( $values ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $values ) ) {
@@ -131,7 +125,7 @@ if( !class_exists( "ModelPDO" ) ) {
 			return "";
 		}
 
-		protected function getUpdateValues( $values ) {
+		static protected function getUpdateValues( $values ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $values ) ) {
@@ -144,7 +138,7 @@ if( !class_exists( "ModelPDO" ) ) {
 			return "";
 		}
 
-		protected function getFields( $fields ) {
+		static protected function getFields( $fields ) {
 			if( is_array( $fields ) && count( $fields ) ) {
 				$res = array();
 				$pdo = self::$pdo;
@@ -162,7 +156,7 @@ if( !class_exists( "ModelPDO" ) ) {
 			}
 		}
 
-		protected function getLimit( $limit = 0, $start_at = 0 ) {
+		static protected function getLimit( $limit = 0, $start_at = 0 ) {
 			if( $limit > 0 ) {
 				if( $start_at > 0 ) {
 					return "LIMIT $start_at, $limit";
@@ -174,16 +168,20 @@ if( !class_exists( "ModelPDO" ) ) {
 			}
 		}
 
+		static private function getName() {
+			return file_basename( get_called_class() );
+		}
+
 		const KEY_AND = "&and";
 		const KEY_OR = "&or";
 		const KEY_BETWEEN = "&between";
 		const KEY_IN = "&in";
 
-		protected function getWhere( $where ) {
-			return is_array( $where ) ? "WHERE " . $this->getWhereAnd( $where ) : "";
+		static protected function getWhere( $where ) {
+			return is_array( $where ) ? "WHERE " . self::getWhereAnd( $where ) : "";
 		}
 
-		protected function getWhereAnd( $where ) {
+		static protected function getWhereAnd( $where ) {
 			if( is_array( $where ) && count( $where ) ) {
 				$res = array();
 				$pdo = self::$pdo;
@@ -191,13 +189,13 @@ if( !class_exists( "ModelPDO" ) ) {
 					foreach( $where as $field => $value ) {
 						if( is_array( $value ) ) {
 							if( $field === self::KEY_AND )
-								$v = $this->getWhereAnd( $field );
+								$v = self::getWhereAnd( $field );
 							elseif( $field === self::KEY_OR )
-								$v = $this->getWhereOr( $field );
+								$v = self::getWhereOr( $field );
 							elseif( $field === self::KEY_BETWEEN )
-								$v = $this->getWhereBetween( $field );
+								$v = self::getWhereBetween( $field );
 							elseif( $field === self::KEY_IN )
-								$v = $this->getWhereIn( $field );
+								$v = self::getWhereIn( $field );
 
 							if( isset( $v ) and !is_null( $v ) and strlen( $v ) )
 								array_push( $res, $v );
@@ -214,7 +212,7 @@ if( !class_exists( "ModelPDO" ) ) {
 			return NULL;
 		}
 
-		protected function getWhereOr( $where ) {
+		static protected function getWhereOr( $where ) {
 			if( is_array( $where ) && count( $where ) ) {
 				$res = array();
 				$pdo = self::$pdo;
@@ -222,13 +220,13 @@ if( !class_exists( "ModelPDO" ) ) {
 					foreach( $where as $field => $value ) {
 						if( is_array( $value ) ) {
 							if( $field === self::KEY_AND )
-								$v = $this->getWhereAnd( $field );
+								$v = self::getWhereAnd( $field );
 							elseif( $field === self::KEY_OR )
-								$v = $this->getWhereOr( $field );
+								$v = self::getWhereOr( $field );
 							elseif( $field === self::KEY_BETWEEN )
-								$v = $this->getWhereBetween( $field );
+								$v = self::getWhereBetween( $field );
 							elseif( $field === self::KEY_IN )
-								$v = $this->getWhereIn( $field );
+								$v = self::getWhereIn( $field );
 
 							if( isset( $v ) and !is_null( $v ) and strlen( $v ) )
 								array_push( $res, $v );
@@ -242,7 +240,7 @@ if( !class_exists( "ModelPDO" ) ) {
 			return NULL;
 		}
 
-		protected function getWhereBetween( $where ) {
+		static protected function getWhereBetween( $where ) {
 			if( is_array( $where ) && count( $where ) ) {
 				$res = array();
 				$pdo = self::$pdo;
@@ -259,7 +257,7 @@ if( !class_exists( "ModelPDO" ) ) {
 			return NULL;
 		}
 
-		protected function getWhereIn( $where ) {
+		static protected function getWhereIn( $where ) {
 			if( is_array( $where ) && count( $where ) ) {
 				$res = array();
 				$pdo = self::$pdo;
@@ -278,3 +276,4 @@ if( !class_exists( "ModelPDO" ) ) {
 		}
 	}
 }
+

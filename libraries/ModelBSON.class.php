@@ -6,43 +6,35 @@ if( !class_exists( "ModelBSON" ) ) {
 
 	class ModelBSON implements Model {
 
-		private static $instances = array();
-		private $name;
-
-		function __construct( $name = null ) {
-
-			$this->name = file_basename( ( is_string( $name ) and strlen( $name ) ) ? $name : get_class( $this ), "Model" );
-		}
-
 
 		//  QUERIES
 
 		const ID = "id";
 
-		function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ) {
+		static function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ) {
 			$res = array();
-			$this->startReading();
-			while( ( $row = $this->getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
-				if( $this->filterWhere( $row, $where ) ) {
+			self::startReading();
+			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 )
 						$start_at--;
 					else
-						array_push( $res, $this->filterFields( $row, $fields ) );
+						array_push( $res, self::filterFields( $row, $fields ) );
 				}
 			}
-			$this->endReading();
+			self::endReading();
 			return $res;
 		}
 
-		function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
-			$this->startReading();
-			while( $row = $this->getRow() ) {
-				if( $this->filterWhere( $row, $where ) ) {
+		static function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
+			self::startReading();
+			while( $row = self::getRow() ) {
+				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 )
 						$start_at--;
 					else {
-						$row = $this->filterFields( $row, $fields );
-						$this->endReading();
+						$row = self::filterFields( $row, $fields );
+						self::endReading();
 						return $row;
 					}
 				}
@@ -50,87 +42,87 @@ if( !class_exists( "ModelBSON" ) ) {
 			return null;
 		}
 
-		function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
+		static function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
 			$res = array();
-			$this->startWritingTemp();
-			$this->startReading();
-			while( ( $row = $this->getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
-				if( $this->filterWhere( $row, $where ) ) {
+			self::startWritingTemp();
+			self::startReading();
+			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 ) {
 						$start_at--;
-						$this->setRow( $row );
+						self::setRow( $row );
 					} else {
 						array_push( $res, $row );
-						$this->setRow( array_merge( $row, $value ) );
+						self::setRow( array_merge( $row, $value ) );
 					}
 				} else {
-					$this->setRow( $row );
+					self::setRow( $row );
 				}
 			}
-			$this->endReading();
-			$this->endWritingTemp();
+			self::endReading();
+			self::endWritingTemp();
 			return $res;
 		}
 
-		function insert( $value = array() ) {
+		static function insert( $value = array() ) {
 
 			if( !self::$handler ) {
 				if( is_array( $value ) ) {
 
 					$value[ self::ID ] = self::nextId();
-					$handler = fopen( $this->getFilePath(), 'a' );
+					$handler = fopen( self::getFilePath(), 'a' );
 					fputs( $handler, json_encode( $value ) . "\n" );
 					fclose( $handler );
 				}
 			} else {
-				throw new Exception( "Already reading in file " . $this->name . "." );
+				throw new Exception( "Already reading in file " . self::getName() . "." );
 			}
 		}
 
-		function remove( array $where, $limit = 0, $start_at = 0 ) {
+		static function remove( array $where, $limit = 0, $start_at = 0 ) {
 			$res = array();
-			$this->startWritingTemp();
-			$this->startReading();
-			while( ( $row = $this->getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
-				if( $this->filterWhere( $row, $where ) ) {
+			self::startWritingTemp();
+			self::startReading();
+			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 ) {
 						$start_at--;
-						$this->setRow( $row );
+						self::setRow( $row );
 					} else {
 						array_push( $res, $row );
 					}
 				} else {
-					$this->setRow( $row );
+					self::setRow( $row );
 				}
 			}
-			$this->endReading();
-			$this->endWritingTemp();
+			self::endReading();
+			self::endWritingTemp();
 			return $res;
 		}
 
-		function count( $where = array(), $limit = 0, $start_at = 0 ) {
+		static function count( $where = array(), $limit = 0, $start_at = 0 ) {
 			$res = 0;
-			$this->startReading();
-			while( ( $row = $this->getRow() ) and ( !$limit or ( $limit < $res ) ) ) {
-				if( $this->filterWhere( $row, $where ) ) {
+			self::startReading();
+			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < $res ) ) ) {
+				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 )
 						$start_at--;
 					else
 						$res++;
 				}
 			}
-			$this->endReading();
+			self::endReading();
 			return $res;
 		}
 
-		private function nextId() {
+		static private function nextId() {
 			$id = 0;
-			$this->startReading();
-			while( ( $row = $this->getRow() ) ) {
+			self::startReading();
+			while( ( $row = self::getRow() ) ) {
 				if( $id < $row[ self::ID ] )
 					$id = $row[ self::ID ];
 			}
-			$this->endReading();
+			self::endReading();
 			return $id + 1;
 		}
 
@@ -140,64 +132,62 @@ if( !class_exists( "ModelBSON" ) ) {
 		private static $handler;
 		private static $handler_temp;
 
-		private function startWritingTemp() {
+		static private function startWritingTemp() {
 
 			if( !self::$handler_temp ) {
-				$temp = $this->getTempPath();
+				$temp = self::getTempPath();
 				self::$handler_temp = fopen( $temp, 'w' );
 			} else {
-				throw new Exception( -1, "Already writing in file " . $this->name . "." );
+				throw new Exception( -1, "Already writing in file " . self::getName() . "." );
 			}
 		}
 
-		private function setRow( $row ) {
+		static private function setRow( $row ) {
 
-			if( !is_array( $row ) )
-				return $this;
+			if( is_array( $row ) ) {
 
-			if( !isset( $row[ self::ID ] ) ) {
-				$row[ self::ID ] = $this->nextId();
+				if( !isset( $row[ self::ID ] ) ) {
+					$row[ self::ID ] = self::nextId();
+				}
+
+				$row = json_encode( $row ) . "\n";
+				fputs( self::$handler_temp, $row );
 			}
-
-			$row = json_encode( $row ) . "\n";
-			fputs( self::$handler_temp, $row );
-
-			return $this;
 		}
 
-		private function endWritingTemp() {
+		static private function endWritingTemp() {
 
 			if( self::$handler_temp ) {
 
 				fclose( self::$handler_temp );
 				self::$handler_temp = null;
 
-				$this->endReading();
-				$temp = $this->getTempPath();
-				$file = $this->getFilePath();
+				self::endReading();
+				$temp = self::getTempPath();
+				$file = self::getFilePath();
 				rename( $temp, $file );
 			}
 		}
 
-		private function startReading() {
+		static private function startReading() {
 
 			if( !self::$handler ) {
-				$file = $this->getFilePath();
+				$file = self::getFilePath();
 				if( !file_exists( $file ) )
 					touch( $file );
 
 				self::$handler = fopen( $file, 'r' );
 			} else {
-				throw new Exception( -1, "Already reading in file " . $this->name . "." );
+				throw new Exception( -1, "Already reading in file " . self::getName() . "." );
 			}
 		}
 
-		private function getRow() {
+		static private function getRow() {
 
 			return json_decode( fgets( self::$handler ), true );
 		}
 
-		private function endReading() {
+		static private function endReading() {
 
 			if( self::$handler ) {
 
@@ -206,21 +196,25 @@ if( !class_exists( "ModelBSON" ) ) {
 			}
 		}
 
+		static private function getName() {
+			return file_basename( get_called_class(), "Model" );
+		}
+
 
 		//  CONSTANTS
 
-		private function getFilePath() {
-			return Request::i()->env->datas . "/" . $this->name . ".bson";
+		static private function getFilePath() {
+			return Request::i()->env->datas . "/" . self::getName() . ".bson";
 		}
 
-		private function getTempPath() {
-			return Request::i()->env->datas . "/" . $this->name . ".bson_temp";
+		static private function getTempPath() {
+			return Request::i()->env->datas . "/" . self::getName() . ".bson_temp";
 		}
 
 
 		//  FILTERS
 
-		private function filterFields( $row = array(), $fields = array() ) {
+		static private function filterFields( $row = array(), $fields = array() ) {
 			if( !is_array( $fields ) or !count( $fields ) )
 				return $row;
 			else {
@@ -235,8 +229,8 @@ if( !class_exists( "ModelBSON" ) ) {
 			}
 		}
 
-		private function filterWhere( $row = array(), $where = array() ) {
-			return $this->check_conditions_and( $row, $where );
+		static private function filterWhere( $row = array(), $where = array() ) {
+			return self::check_conditions_and( $row, $where );
 		}
 
 
@@ -247,7 +241,7 @@ if( !class_exists( "ModelBSON" ) ) {
 		const KEY_BETWEEN = "&between";
 		const KEY_IN = "&in";
 
-		private function check_conditions_and( $data, $where ) {
+		static private function check_conditions_and( $data, $where ) {
 			if( is_array( $where ) ) {
 				if( isset( $where[ 0 ] ) && is_callable( $where[ 0 ] ) ) {
 					return $where[ 0 ]( $data, $where[ 1 ] );
@@ -274,7 +268,7 @@ if( !class_exists( "ModelBSON" ) ) {
 			return false;
 		}
 
-		private function check_conditions_or( $data, $where ) {
+		static private function check_conditions_or( $data, $where ) {
 			if( is_array( $where ) ) {
 				if( isset( $where[ 0 ] ) && is_callable( $where[ 0 ] ) ) {
 					return $where[ 0 ]( $data, $where[ 1 ] );
@@ -301,7 +295,7 @@ if( !class_exists( "ModelBSON" ) ) {
 			return false;
 		}
 
-		private function check_conditions_between( $data, $between ) {
+		static private function check_conditions_between( $data, $between ) {
 			if( is_array( $between ) && isset( $between[ 0 ] ) ) {
 
 				foreach( $between as $k => $w ) {
@@ -318,7 +312,7 @@ if( !class_exists( "ModelBSON" ) ) {
 			return false;
 		}
 
-		private function check_conditions_in( $data, $in ) {
+		static private function check_conditions_in( $data, $in ) {
 			if( is_array( $in ) && isset( $in[ 0 ] ) && isset( $in[ 1 ] ) ) {
 
 				foreach( $in as $k => $w ) {
@@ -338,7 +332,7 @@ if( !class_exists( "ModelBSON" ) ) {
 			return false;
 		}
 
-		private function check_conditions_between_or( $data, $between ) {
+		static private function check_conditions_between_or( $data, $between ) {
 			if( is_array( $between ) && isset( $between[ 0 ] ) && isset( $between[ 1 ] ) ) {
 
 				foreach( $between as $k => $w ) {
@@ -354,7 +348,7 @@ if( !class_exists( "ModelBSON" ) ) {
 			return false;
 		}
 
-		private function check_conditions_in_or( $data, $in ) {
+		static private function check_conditions_in_or( $data, $in ) {
 			if( is_array( $in ) && isset( $in[ 0 ] ) && isset( $in[ 1 ] ) ) {
 
 				foreach( $in as $k => $w ) {
