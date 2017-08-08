@@ -34,6 +34,22 @@ if( !class_exists( "ModelBSON" ) ) {
 			return $res;
 		}
 
+		function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
+			$this->startReading();
+			while( $row = $this->getRow() ) {
+				if( $this->filterWhere( $row, $where ) ) {
+					if( $start_at > 0 )
+						$start_at--;
+					else {
+						$row = $this->filterFields( $row, $fields );
+						$this->endReading();
+						return $row;
+					}
+				}
+			}
+			return null;
+		}
+
 		function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
 			$res = array();
 			$this->startWritingTemp();

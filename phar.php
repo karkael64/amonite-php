@@ -48,7 +48,7 @@ define( "ROOT", realpath( __DIR__ ) );
 $pharname = basename( __FILE__ );
 
 /** @SECURITY Catch errors */
-require_once ROOT . "/libraries/CustomException.class.php";
+require_once "phar://$pharname/CustomException.class.php";
 CustomException::set_error_handler();
 CustomException::set_fatal_handler();
 
