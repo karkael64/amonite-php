@@ -155,7 +155,7 @@ if( !class_exists( "Controller" ) ) {
 			 */
 
 			Controller::register( $defaultController = new Controller( function( Request $req, Response $res ) {
-				throw new HttpCode( 404, $req->file );
+				return new HttpCode( 404, $req->file );
 			}, true ) );
 
 

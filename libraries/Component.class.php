@@ -29,9 +29,14 @@ if( !class_exists( "Component" ) ) {
 
 			$c = $this->getInner();
 			$v = sha1( $c );
-			$n = file_basename( get_class( $this ), get_class() );
+			$n = $this->getName();
 
 			return "<div component=\"$n\" version=\"$v\">$c</div>";
+		}
+
+		public function getName() {
+
+			return file_basename( get_class( $this ), get_class() );
 		}
 	}
 
