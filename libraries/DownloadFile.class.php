@@ -6,9 +6,9 @@ if( !class_exists( "DownloadFile" ) ) {
 
 	class DownloadFile extends File {
 
-		function __construct( $filename ) {
+		function __construct( $filename, $data = null ) {
 
-			parent::__construct( $filename );
+			parent::__construct( $filename, $data );
 			$this->setHeader( "Content-Disposition", "inline; filename=" . basename( $filename ) );
 		}
 	}

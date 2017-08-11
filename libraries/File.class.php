@@ -7,19 +7,22 @@ if( !class_exists( "File" ) ) {
 	class File extends Content {
 
 		private $filename;
+		private $data;
 
-		function __construct( $filename ) {
+		function __construct( $filename, $data = null ) {
 
 			parent::__construct();
 
 			$this->filename = $filename;
 			$this->setMime( Content::getFilenameMime( $filename ) );
 			$this->setHeader( "Content-Disposition", "inline; filename=" . basename( $filename ) );
+
+			$this->data = $data;
 		}
 
 
 		function get() {
-			return file_get_contents( $this->filename );
+			return $this->data = file_get_contents( $this->filename );
 		}
 
 		function set( $text ) {
@@ -57,7 +60,10 @@ if( !class_exists( "File" ) ) {
 		}
 
 		function getContent() {
-			return $this->get();
+			if( !is_null( $this->data ) )
+				return $this->data;
+			else
+				return $this->get();
 		}
 
 		static function execFile( $filename, $args = NULL ) {
