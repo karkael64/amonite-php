@@ -73,10 +73,14 @@ if( !class_exists( "ModelBSON" ) ) {
 					$handler = fopen( self::getFilePath(), 'a' );
 					fputs( $handler, json_encode( $value ) . "\n" );
 					fclose( $handler );
+
+					return $value;
 				}
 			} else {
 				throw new Exception( "Already reading in file " . self::getName() . "." );
 			}
+
+			return null;
 		}
 
 		static function remove( array $where, $limit = 0, $start_at = 0 ) {

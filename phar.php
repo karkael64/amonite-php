@@ -44,7 +44,7 @@ $p->setStub( '<?php
 
 /** @SECURITY Anti-DDOS system */
 time_nanosleep( 0 , 1 );
-define( "ROOT", realpath( __DIR__ ) );
+defined( "ROOT" ) or define( "ROOT", realpath( __DIR__ ) );
 $pharname = basename( __FILE__ );
 
 /** @SECURITY Catch errors */
