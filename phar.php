@@ -61,6 +61,7 @@ require_once "phar://$pharname/ModelBSON.class.php";
 require_once "phar://$pharname/ModelPDO.class.php";
 require_once "phar://$pharname/Component.class.php";
 require_once "phar://$pharname/Document.class.php";
+require_once "phar://$pharname/DownloadFile.class.php";
 
 __HALT_COMPILER(); 
 ?>' );

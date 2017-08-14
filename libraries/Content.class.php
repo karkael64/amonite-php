@@ -144,7 +144,7 @@ if( !class_exists( "Content" ) ) {
 
 			try {
 				return $this->getContent();
-			} catch( Exception $e ) {
+			} catch( Throwable $e ) {
 				return throwable_to_mime( $e, $this->mime );
 			}
 		}
