@@ -24,6 +24,7 @@ if( !class_exists( "Response" ) ) {
 
 		static function getAnswerable( $el ) {
 
+
 			if( $el instanceof Answerable )
 				return $el;
 
@@ -73,7 +74,6 @@ if( !class_exists( "Response" ) ) {
 
 		public function sendAnswerable( Answerable $el ) {
 
-
 			if( $el instanceof HttpCode ) {
 
 				if( ( $code = $el->getCode() ) < 300 )
@@ -115,7 +115,8 @@ if( !class_exists( "Response" ) ) {
 
 			try {
 				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
-			} catch( Throwable $answer ) {
+			}
+			catch( Throwable $answer ) {
 				ob_clean();
 				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
 			}
