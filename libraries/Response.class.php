@@ -113,13 +113,12 @@ if( !class_exists( "Response" ) ) {
 		static function send( $el ) {
 
 			try {
-				$answer = self::getAnswerable( $el );
+				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
 			}
 			catch( Throwable $answer ) {
 				ob_clean();
+				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
 			}
-
-			return self::getInstance()->sendAnswerable( $answer );
 		}
 
 
