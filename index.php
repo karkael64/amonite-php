@@ -36,11 +36,6 @@ Response::send( function( Request $req, Response $res ) {
 		"libraries" => realpath( ROOT . "/libraries" )
 	);
 
-	try {
-		return Controller::auto();
-	}
-	catch( Throwable $t ) {
-		return $t;
-	}
+	return Controller::auto();
 } );
 

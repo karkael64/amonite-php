@@ -24,7 +24,6 @@ if( !class_exists( "Response" ) ) {
 
 		static function getAnswerable( $el ) {
 
-
 			if( $el instanceof Answerable )
 				return $el;
 
@@ -114,12 +113,13 @@ if( !class_exists( "Response" ) ) {
 		static function send( $el ) {
 
 			try {
-				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
+				$answer = self::getAnswerable( $el );
 			}
 			catch( Throwable $answer ) {
 				ob_clean();
-				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
 			}
+
+			return self::getInstance()->sendAnswerable( $answer );
 		}
 
 

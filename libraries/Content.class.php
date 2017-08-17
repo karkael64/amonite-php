@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Ka
- * Date: 22/06/2017
- * Time: 14:53
- */
-
 
 if( !class_exists( "Content" ) ) {
 

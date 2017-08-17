@@ -76,37 +76,31 @@ if( !class_exists( "Controller" ) ) {
 		}
 
 		static function auto() {
+
+
 			/*
 			 * $fileController is a controller
 			 *  -   which read a file
 			 *  -   if file does not end with .php nor .phtml
 			 */
-
-			Controller::register( $fileController = new Controller( function( Request $req, Response $res ) {
-
-				throw new HttpCode( 418 );
-
+			self::register( $fileController = new self( function( Request $req, Response $res ) {
+				return new HttpCode( 418 );
 			}, function( Request $req, Response $res ) {
-
 				return $req::getMethod() === "BREW";
-
 			} ) );
+
+
 			/*
 			 * $fileController is a controller
 			 *  -   which read a file
 			 *  -   if file does not end with .php nor .phtml
 			 */
-
-			Controller::register( $fileController = new Controller( function( Request $req, Response $res ) {
-
+			self::register( $fileController = new self( function( Request $req, Response $res ) {
 				$filename = $req->env->theme . $req->file;
 				return new File( $filename );
-
 			}, function( $req, $res ) {
-
 				$filename = $req->env->theme . $req->file;
 				return !preg_match( '/(\.php|\.phtml)$/', $filename ) and file_exists( $filename ) and !is_dir( $filename );
-
 			} ) );
 
 
@@ -115,17 +109,12 @@ if( !class_exists( "Controller" ) ) {
 			 *  -   which execute a file
 			 *  -   if file ends with .php or .phtml
 			 */
-
-			Controller::register( $execController = new Controller( function( Request $req, Response $res ) { // do execute a file
-
+			self::register( $execController = new self( function( Request $req, Response $res ) { // do execute a file
 				$filename = $req->env->theme . $req->file;
 				return File::execFile( $filename, array( "request" => $req, "response" => $res ) );
-
 			}, function( $req, $res ) { // if
-
 				$filename = $req->env->theme . $req->file;
 				return preg_match( '/(\.php|\.phtml)$/', $filename ) and file_exists( $filename ) and !is_dir( $filename );
-
 			} ) );
 
 
@@ -134,17 +123,12 @@ if( !class_exists( "Controller" ) ) {
 			 *  -   which execute a file name with .php at the end
 			 *  -   if file does not exists but his name with .php at the end exists
 			 */
-
-			Controller::register( $hiddenExecController = new Controller( function( Request $req, Response $res ) {
-
+			self::register( $hiddenExecController = new self( function( Request $req, Response $res ) {
 				$filename = $req->env->theme . $req->file . ".php";
 				return File::execFile( $filename, array( "request" => $req, "response" => $res ) );
-
 			}, function( $req, $res ) {
-
 				$filename = $req->env->theme . $req->file . ".php";
 				return file_exists( $filename ) and !is_dir( $filename );
-
 			} ) );
 
 
@@ -153,13 +137,17 @@ if( !class_exists( "Controller" ) ) {
 			 *  -   which throw "404 Not Found"
 			 *  -   if no other controller match
 			 */
-
-			Controller::register( $defaultController = new Controller( function( Request $req, Response $res ) {
+			self::register( $defaultController = new self( function( Request $req, Response $res ) {
 				return new HttpCode( 404, $req->file );
 			}, true ) );
 
 
-			return Controller::main( array( Request::getInstance(), Response::getInstance() ) );
+			try {
+				$answer = Controller::main( array( Request::getInstance(), Response::getInstance() ) );
+			}
+			catch( Throwable $answer ) {}
+
+			return $answer;
 		}
 	}
 
