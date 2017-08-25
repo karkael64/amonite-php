@@ -14,7 +14,10 @@ if( !class_exists( "ModelBSON" ) ) {
 		static function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ) {
 			$res = array();
 			self::startReading();
+			self::$last_method = "select";
+			self::$last_counter = 0;
 			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+				self::$last_counter++;
 				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 )
 						$start_at--;
@@ -28,7 +31,10 @@ if( !class_exists( "ModelBSON" ) ) {
 
 		static function selectFirst( $fields = array(), $where = array(), $start_at = 0 ) {
 			self::startReading();
+			self::$last_method = "selectFirst";
+			self::$last_counter = 0;
 			while( $row = self::getRow() ) {
+				self::$last_counter++;
 				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 )
 						$start_at--;
@@ -39,6 +45,7 @@ if( !class_exists( "ModelBSON" ) ) {
 					}
 				}
 			}
+			self::endReading();
 			return null;
 		}
 
@@ -46,7 +53,10 @@ if( !class_exists( "ModelBSON" ) ) {
 			$res = array();
 			self::startWritingTemp();
 			self::startReading();
+			self::$last_method = "update";
+			self::$last_counter = 0;
 			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+				self::$last_counter++;
 				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 ) {
 						$start_at--;
@@ -87,7 +97,10 @@ if( !class_exists( "ModelBSON" ) ) {
 			$res = array();
 			self::startWritingTemp();
 			self::startReading();
+			self::$last_method = "remove";
+			self::$last_counter = 0;
 			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+				self::$last_counter++;
 				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 ) {
 						$start_at--;
@@ -107,7 +120,10 @@ if( !class_exists( "ModelBSON" ) ) {
 		static function count( $where = array(), $limit = 0, $start_at = 0 ) {
 			$res = 0;
 			self::startReading();
+			self::$last_method = "count";
+			self::$last_counter = 0;
 			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < $res ) ) ) {
+				self::$last_counter++;
 				if( self::filterWhere( $row, $where ) ) {
 					if( $start_at > 0 )
 						$start_at--;
@@ -133,6 +149,9 @@ if( !class_exists( "ModelBSON" ) ) {
 
 		//  FILE MANAGER
 
+		private static $last_file;
+		private static $last_method;
+		private static $last_counter;
 		private static $handler;
 		private static $handler_temp;
 
@@ -175,14 +194,22 @@ if( !class_exists( "ModelBSON" ) ) {
 
 		static private function startReading() {
 
+			$dt = now_ms();
+			while( !is_null( self::$handler ) && ( now_ms() - $dt ) <  2000 ) { time_nanosleep( 0, 1 ); }
+
 			if( !self::$handler ) {
 				$file = self::getFilePath();
 				if( !file_exists( $file ) )
 					touch( $file );
 
 				self::$handler = fopen( $file, 'r' );
+				self::$last_file = $file;
 			} else {
-				throw new Exception( -1, "Already reading in file " . self::getName() . "." );
+				throw new Exception( "Can't read " . self::getName()
+					. ", already reading in file " . self::$last_file
+					. ", counter " . self::$last_counter
+					. ", method " . self::$last_method
+					. ".", -1 );
 			}
 		}
 
@@ -261,8 +288,8 @@ if( !class_exists( "ModelBSON" ) ) {
 						elseif( $k == self::KEY_IN && !self::check_conditions_in( $data, $w ) )
 							return false;
 
-						elseif( !isset( $data[ $k ] ) && ( $w !== null ) )
-							return false;
+						elseif( !isset( $data[ $k ] ) && ( $w === null ) )
+							continue;
 						elseif( $data[ $k ] !== $w )
 							return false;
 					}

@@ -117,7 +117,7 @@ if( !class_exists( "Response" ) ) {
 			}
 			catch( Throwable $answer ) {
 				ob_clean();
-				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
+				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
 			}
 		}
 
