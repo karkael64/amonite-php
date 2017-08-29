@@ -167,7 +167,7 @@ if( !class_exists( "Controller" ) ) {
 		static function auto( $mode = self::CTRL_FILE ) {
 
 			self::autoRegister( $mode );
-			self::autoCatch();
+			return self::autoCatch();
 		}
 	}
 
