@@ -33,8 +33,14 @@ if( !class_exists( "Response" ) ) {
 			elseif( is_callable( $el ) )
 				return self::getAnswerable( call_user_func_array( $el, array( Request::getInstance(), Response::getInstance() ) ) );
 
-			elseif( is_string( $el = to_string( $el ) ) )
-				return new HttpCode( 200, $el );
+			elseif( is_string( $el = to_string( $el ) ) ) {
+				if( !strlen( $el ) )
+					return new HttpCode( 204, "" );
+				if( sha1( $el ) === Request::getEtag() )
+					return new HttpCode( 304, "" );
+				else
+					return new HttpCode( 200, $el );
+			}
 
 			else
 				return ( new HttpCode( 500, new TypeException( "Parameter is not Answerable object nor can be casted to a String." ) ) );
