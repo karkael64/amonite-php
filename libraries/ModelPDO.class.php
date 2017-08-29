@@ -4,6 +4,7 @@ if( !class_exists( "ModelPDO" ) ) {
 
 	class ModelPDO implements Model {
 
+		const ID = "id";
 		protected static $pdo = null;
 
 		static function setPDO( PDO $pdo ) {
