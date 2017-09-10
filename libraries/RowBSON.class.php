@@ -3,13 +3,11 @@
 if( !class_exists( "RowBSON" ) ) {
 
 	require_once "ModelBSON.class.php";
+	require_once "Row.interface.php";
 
-	class RowBSON extends ModelBSON {
+	class RowBSON extends ModelBSON implements Row {
 
 		protected $data;
-		const ENABLE = false;
-		const DISABLE = true;
-		const KEY_ENABLED = "removed";
 
 		function __construct( $id = array() ) {
 
@@ -42,6 +40,11 @@ if( !class_exists( "RowBSON" ) ) {
 			return $this;
 		}
 
+
+		const ENABLE = false;
+		const DISABLE = true;
+		const KEY_ENABLED = "removed";
+
 		public function disable() {
 
 			return $this->save( array( self::KEY_ENABLED => self::DISABLE ) );
@@ -63,6 +66,8 @@ if( !class_exists( "RowBSON" ) ) {
 			unset( $this->data[ $name ] );
 		}
 
+
+
 		public function toArray() {
 			return $this->data;
 		}
@@ -83,6 +88,47 @@ if( !class_exists( "RowBSON" ) ) {
 				return $res;
 			}
 			return null;
+		}
+
+
+		private static $foreign_multiple = array();
+		private static $foreign_unique = array();
+
+		static function addForeignMultiple( $class_name, $foreign_id_field, $self_id_field = self::ID ) {
+			if( !isset( self::$foreign_multiple[ $class_name ] ) ) {
+				self::$foreign_multiple[ $class_name ] = array();
+			}
+			self::$foreign_multiple[ $class_name ][ $self_id_field ] = $foreign_id_field;
+		}
+
+		static function addForeignUnique( $class_name, $self_id_field, $foreign_id_field = self::ID ) {
+			if( !isset( self::$foreign_unique[ $class_name ] ) ) {
+				self::$foreign_unique[ $class_name ] = array();
+			}
+			self::$foreign_unique[ $class_name ][ $self_id_field ] = $foreign_id_field;
+		}
+
+		static function issetForeign( $class_name ) {
+			return isset( self::$foreign_multiple[ $class_name ] ) or isset( self::$foreign_unique[ $class_name ] );
+		}
+
+
+		function getForeignAsArray( $class_name ) {
+			if( self::issetForeign( $class_name ) and class_exists( $class_name ) ) {
+				$where = array();
+				foreach( self::$foreign_unique[ $class_name ] as $self_id_field => $foreign_id_field ) {
+					$where[ $foreign_id_field ] = $this->__get( $self_id_field );
+				}
+				return $class_name::select( null, $where );
+			}
+			return null;
+		}
+
+		function getForeign( $class_name ) {
+			if( is_array( $data = self::getForeignAsArray( $class_name ) ) )
+				return self::arrayToModel( $data, $class_name );
+			else
+				return null;
 		}
 	}
 }

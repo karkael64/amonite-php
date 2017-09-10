@@ -4,7 +4,7 @@ if( !class_exists( "Email" ) ) {
 
     class Email {
 
-        const ADMIN_EMAIL =       "webmaster@sem-rscc.org";
+        const ADMIN_EMAIL =       "webmaster@sem-rscc.fr";
         const ADMIN_EMAIL_NAME =  "SEM RSCC Webmaster";
         const ADMIN_ERROR_TITLE = "Admin Error Report";
         const SITE_NAME =         "SEM RSCC";
@@ -30,9 +30,9 @@ if( !class_exists( "Email" ) ) {
          *  @return Email
          */
 
-        public function setFrom( $addr, $name = null ) {    $this->from =    [[ $addr => $name ]]; if( !$this->replyTo ) $this->setReplyTo( $addr, $name ); return $this; }
-        public function setTo( $addr, $name = null ) {      $this->to =      [[ $addr => $name ]];                                                          return $this; }
-        public function setReplyTo( $addr, $name = null ) { $this->replyTo = [[ $addr => $name ]];                                                          return $this; }
+        public function setFrom( $addr, $name = null ) {    $this->from =    [ $addr => $name ]; if( !$this->replyTo ) $this->setReplyTo( $addr, $name ); return $this; }
+        public function setTo( $addr, $name = null ) {      $this->to =      [ $addr => $name ];                                                          return $this; }
+        public function setReplyTo( $addr, $name = null ) { $this->replyTo = [ $addr => $name ];                                                          return $this; }
         public function addCC( $addr, $name = null ) {
             if( is_array( $addr ) ) foreach( $addr as $k => $a ) $this->addCC( $k, $a );
             else $this->cc[ $addr ] = $name;

@@ -36,6 +36,6 @@ Response::send( function( Request $req, Response $res ) {
 		"libraries" => realpath( ROOT . "/libraries" )
 	);
 
-	return Controller::auto();
+	return Controller::auto( Controller::ALL_CTRL );
 } );
 
