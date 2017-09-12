@@ -6,9 +6,12 @@ if( !class_exists( "HttpCode" ) ) {
 
 	class HttpCode extends Exception implements Answerable {
 
-		function __construct( $code = 0, $message = "", Throwable $previous = null ) {
+		function __construct( $code = 0, $message = "", $previous = null ) {
 
-			parent::__construct( to_string( $message ), $code, $previous );
+			if( !( $previous instanceof Throwable ) and !( $previous instanceof Exception ) )
+				$previous = null;
+
+			parent::__construct( to_string_exec( $message ), $code, $previous );
 
 			// MIME
 			if( $mime = Content::getFilenameMime( Request::getFilename() ) ) {

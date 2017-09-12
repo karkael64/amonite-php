@@ -15,6 +15,7 @@ $files = array(
 	// INTERFACES
 	LIB . "Answerable.interface.php",
 	LIB . "Model.interface.php",
+	LIB . "Row.interface.php",
 
 	// FUNCTIONS
 	LIB . "Main.function.php",

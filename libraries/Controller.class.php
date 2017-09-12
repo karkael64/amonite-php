@@ -198,6 +198,7 @@ if( !class_exists( "Controller" ) ) {
 				$answer = Controller::main( array( Request::getInstance(), Response::getInstance() ) );
 			}
 			catch( Throwable $answer ) {}
+			catch( Exception $answer ) {}
 
 			return $answer;
 		}

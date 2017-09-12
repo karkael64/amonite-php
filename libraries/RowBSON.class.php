@@ -47,7 +47,8 @@ if( !class_exists( "RowBSON" ) ) {
 
 		public function disable() {
 
-			return $this->save( array( self::KEY_ENABLED => self::DISABLE ) );
+			$this->__set( self::KEY_ENABLED, self::DISABLE );
+			return $this->save();
 		}
 
 		public function __get( $name ) {

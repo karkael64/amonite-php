@@ -78,7 +78,12 @@ if( !class_exists( "File" ) ) {
 				$r = require $filename;
 				$o = ob_get_clean();
 				return ( $r === 1 ) ? $o : $r;
-			} catch( Throwable $e ) {
+
+			} catch( Throwable $t ) {
+				ob_clean();
+				throw $t;
+
+			} catch( Exception $e ) {
 				ob_clean();
 				throw $e;
 			}

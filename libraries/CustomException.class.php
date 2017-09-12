@@ -4,10 +4,12 @@ if( !class_exists( "CustomException" ) ) {
 
 	abstract class CustomException extends Exception {
 
-		public function __construct( $message = "", $code = 0, Throwable $previous = null, $filename = null, $line = null ) {
+		public function __construct( $message = "", $code = 0, $previous = null, $filename = null, $line = null ) {
 
 			if( !is_null( $filename ) ) $this->file = $filename;
 			if( !is_null( $line ) ) $this->line = $line;
+			if( !( $previous instanceof Throwable ) and !( $previous instanceof Exception ) )
+				$previous = null;
 
 			parent::__construct( $message, $code, $previous );
 		}
@@ -88,7 +90,6 @@ if( !class_exists( "CustomException" ) ) {
 				$msg = $error[ "message" ];
 				$file = $error[ "file" ];
 				$line = $error[ "line" ];
-
 
 				$fatal = new FatalException( $msg, $type, null, $file, $line );
 				Response::send( $fatal );

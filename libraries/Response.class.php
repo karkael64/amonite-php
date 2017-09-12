@@ -30,6 +30,9 @@ if( !class_exists( "Response" ) ) {
 			elseif( $el instanceof Throwable )
 				return new HttpCode( 500, "Throwable catched.", $el );
 
+			elseif( $el instanceof Exception )
+				return new HttpCode( 500, "Throwable catched.", $el );
+
 			elseif( is_callable( $el ) )
 				return self::getAnswerable( call_user_func_array( $el, array( Request::getInstance(), Response::getInstance() ) ) );
 
@@ -122,6 +125,10 @@ if( !class_exists( "Response" ) ) {
 				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
 			}
 			catch( Throwable $answer ) {
+				ob_clean();
+				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
+			}
+			catch( Exception $answer ) {
 				ob_clean();
 				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
 			}

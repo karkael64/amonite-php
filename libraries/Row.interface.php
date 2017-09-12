@@ -4,8 +4,6 @@ if( !interface_exists( "Row" ) ) {
 
 	interface Row {
 
-		const ID = "id";
-
 		function __construct( $id_or_data = null );
 		function save( $data = null );
 		function disable();
@@ -18,8 +16,8 @@ if( !interface_exists( "Row" ) ) {
 		function toArray();
 		static function arrayToModel( $array, $model_name = null );
 
-		static function addForeignMultiple( $class_name, $foreign_id_field, $self_id_field = self::ID );
-		static function addForeignUnique( $class_name, $self_id_field, $foreign_id_field = self::ID );
+		static function addForeignMultiple( $class_name, $foreign_id_field, $self_id_field );
+		static function addForeignUnique( $class_name, $self_id_field, $foreign_id_field );
 		static function issetForeign( $class_name );
 
 		function getForeignAsArray( $class_name );

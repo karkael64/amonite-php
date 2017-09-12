@@ -139,6 +139,8 @@ if( !class_exists( "Content" ) ) {
 				return $this->getContent();
 			} catch( Throwable $e ) {
 				return throwable_to_mime( $e, $this->mime );
+			} catch( Exception $e ) {
+				return throwable_to_mime( $e, $this->mime );
 			}
 		}
 	}

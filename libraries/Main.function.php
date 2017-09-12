@@ -24,6 +24,36 @@ if( !function_exists( "to_string" ) ) {
 			return "null";
 		elseif( is_array( $el ) )
 			return json_encode( $el );
+		elseif( is_object( $el ) ) {
+			return "<Object:" . get_class( $el ) . ">";
+		} else
+			throw new Exception( "Parameter is not a String, a Boolean, a Number, an Array, a Function, an Object nor null." );
+	}
+}
+
+
+if( !function_exists( "to_string_exec" ) ) {
+
+	/**
+	 * @function to_string is used to translate every item to string.
+	 * @param string|bool|int|double|float|array|callable|object|null $el is the parameter to stringify.
+	 * @return string is the translate of bool, null, array to JSON, recursive call function until it does not return a
+	 *              function, call object __toString function or set it between chevrons.
+	 * @throws Exception if parameter is not a string, bool, int, double, float, array, callable, object or null.
+	 */
+
+	function to_string_exec( $el ) {
+
+		if( is_string( $el ) )
+			return $el;
+		elseif( is_bool( $el ) )
+			return $el ? "true" : "false";
+		elseif( is_numeric( $el ) )
+			return "" . $el;
+		elseif( is_null( $el ) )
+			return "null";
+		elseif( is_array( $el ) )
+			return json_encode( $el );
 		elseif( is_callable( $el ) )
 			return to_string( call_user_func( $el, Request::getInstance(), Response::getInstance() ) );
 		elseif( is_object( $el ) ) {
@@ -379,13 +409,14 @@ if( !function_exists( "exception_to_string" ) ) {
 	 * @return string
 	 */
 
-	function exception_to_string( Throwable $e ) {
+	function exception_to_string( $e ) {
 
 		if( class_exists( "FatalException" ) and $e instanceof FatalException ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : ";
 			return $title . "\n\n" . $e->getMessage() . "\n\n";
-		} else {
+		}
+		elseif( $e instanceof Throwable or $e instanceof Exception ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : " . json_encode( $e->getMessage() );
 
@@ -403,6 +434,7 @@ if( !function_exists( "exception_to_string" ) ) {
 
 			return $title . "\n\n" . $lines . "\n\n";
 		}
+		return "";
 	}
 }
 
@@ -414,13 +446,14 @@ if( !function_exists( "exception_to_html" ) ) {
 	 * @return string
 	 */
 
-	function exception_to_html( Throwable $e ) {
+	function exception_to_html( $e ) {
 
 		if( class_exists( "FatalException" ) and $e instanceof FatalException ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : ";
 			return "<div><pre>" . htmlentities( $title ) . "</pre><pre>" . htmlentities( $e->getMessage() ) . "</pre></div>";
-		} else {
+		}
+		elseif( $e instanceof Throwable or $e instanceof Exception ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : " . json_encode( $e->getMessage() );
 
@@ -438,6 +471,7 @@ if( !function_exists( "exception_to_html" ) ) {
 
 			return "<div><pre>" . htmlentities( $title ) . "</pre><pre>" . htmlentities( $lines ) . "</pre></div>";
 		}
+		return "";
 	}
 }
 
@@ -448,13 +482,17 @@ if( !function_exists( "throwable_to_array" ) ) {
 	 * @param Throwable $e
 	 * @return array
 	 */
-	function throwable_to_array( Throwable $e ) {
-		$trace = $e->getTrace();
-		$trace[ "code" ] = $e->getCode();
-		$trace[ "message" ] = $e->getMessage();
-		$trace[ "file" ] = $e->getFile();
-		$trace[ "line" ] = $e->getLine();
-		return $trace;
+	function throwable_to_array( $e ) {
+
+		if( $e instanceof Throwable or $e instanceof Exception ) {
+			$trace = $e->getTrace();
+			$trace[ "code" ] = $e->getCode();
+			$trace[ "message" ] = $e->getMessage();
+			$trace[ "file" ] = $e->getFile();
+			$trace[ "line" ] = $e->getLine();
+			return $trace;
+		}
+		return null;
 	}
 }
 
@@ -467,8 +505,12 @@ if( !function_exists( "throwable_to_json" ) ) {
 	 * @return string
 	 */
 
-	function throwable_to_json( Throwable $e, $options = null ) {
-		return json_encode( throwable_to_array( $e ), $options );
+	function throwable_to_json( $e, $options = null ) {
+
+		if( $e instanceof Throwable or $e instanceof Exception )
+			return json_encode( throwable_to_array( $e ), $options );
+		else
+			return "";
 	}
 
 }
@@ -482,14 +524,19 @@ if( !function_exists( "throwable_to_mime" ) ) {
 	 * @return string
 	 */
 
-	function throwable_to_mime( Throwable $e, $mime ) {
+	function throwable_to_mime( $e, $mime ) {
 
-		if( $mime === "application/json" ) {
-			return throwable_to_json( $e );
-		} elseif( $mime === "text/html" ) {
-			return exception_to_html( $e );
-		} else {
-			return exception_to_string( $e );
+		if( $e instanceof Throwable or $e instanceof Exception ) {
+			if( $mime === "application/json" ) {
+				return throwable_to_json( $e );
+			} elseif( $mime === "text/html" ) {
+				return exception_to_html( $e );
+			} else {
+				return exception_to_string( $e );
+			}
+		}
+		else {
+			return "really bad error... :(\n";
 		}
 	}
 }
