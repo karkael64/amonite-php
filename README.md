@@ -61,7 +61,6 @@ __File : /templates/documents/IndexDocument.php__
  class IndexDocument extends Document {
      function getDocument( Request $req, Response $res ) {
      
-         ob_start();
          ?>
 <!doctype html>
 <html>
@@ -71,7 +70,6 @@ __File : /templates/documents/IndexDocument.php__
         <?php echo ( new NavComponent() )->getContent(); ?>
     </body>
 </html><?php
-         return ob_get_content();
      }
  }
  ```
@@ -91,7 +89,6 @@ __File : /templates/components/NavComponent.php__
      // function called by $this->get() or $this->getContent()
      function getComponent( Request $req, Response $res ) {
          
-         ob_start();
          ?>
          <nav>
              <ul>
@@ -107,7 +104,6 @@ __File : /templates/components/NavComponent.php__
              </ul>
          </nav>
          <?php
-         return ob_get_content();
      }
  }
  ```
@@ -133,6 +129,7 @@ __File : /theme/main/index.html.php__
      public function __construct( $name = "" );
  
      public function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ); // return array of items
+     public function selectFirst( $fields = array(), $where = array(), $start_at = 0 ); // return first items
      public function count( $where = array(), $limit = 0, $start_at = 0 ); // return integer count
      public function remove( $where = array(), $limit = 0, $start_at = 0 ); // return array of items
      public function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ); // return array of items items
