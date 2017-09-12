@@ -21,6 +21,7 @@ $files = array(
 	LIB . "Main.function.php",
 
 	// CLASSES
+	LIB . "Backup.class.php",
 	LIB . "Component.class.php",
 	LIB . "Constants.class.php",
 	LIB . "Content.class.php",
@@ -66,6 +67,9 @@ require_once "phar://$pharname/RowPDO.class.php";
 require_once "phar://$pharname/Component.class.php";
 require_once "phar://$pharname/Document.class.php";
 require_once "phar://$pharname/DownloadFile.class.php";
+
+/** If you need... */
+require_once "phar://$pharname/Backup.class.php";
 require_once "phar://$pharname/Email.class.php";
 
 __HALT_COMPILER(); 
