@@ -1,10 +1,10 @@
 <?php
 
-Request::getLibrary( "Unit" );
+require_once ROOT . "/libraries/Unit.class.php";
 
 return new Unit( "CustomException", function( Unit $unit ){
 
-	Request::getLibrary( "CustomException" );
+	require_once ROOT . "/libraries/CustomException.class.php";
 
 	$unit->section( "Classes are set", function( Unit $unit ){
 

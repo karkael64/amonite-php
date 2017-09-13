@@ -2,7 +2,7 @@
 
 if( !class_exists( "NavigationComponent" ) ) {
 
-	Request::getModel( "nav" );
+	require_once ROOT . "/datas/models/NavModel.php";
 
 	class NavigationComponent extends Component {
 

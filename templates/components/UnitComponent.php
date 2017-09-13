@@ -2,7 +2,7 @@
 
 if( !class_exists( "UnitComponent" ) ) {
 
-	Request::getLibrary( "Unit" );
+	require_once ( ROOT . "/libraries/Unit.class.php" );
 
 	class UnitComponent extends Component {
 
@@ -15,9 +15,9 @@ if( !class_exists( "UnitComponent" ) ) {
 
 			$all = new Unit( "Unit tests" );
 
-			$all->section( Request::getLibrary( "units/Unit.unit.php" ) );
-			$all->section( Request::getLibrary( "units/CustomException.unit.php" ) );
-			$all->section( Request::getLibrary( "units/Component.unit.php" ) );
+			$all->section( require_once ( ROOT . "/libraries/units/Unit.unit.php" ) );
+			$all->section( require_once ( ROOT . "/libraries/units/CustomException.unit.php" ) );
+			$all->section( require_once ( ROOT . "/libraries/units/Component.unit.php" ) );
 
 			echo $all->toMime( $this->mime );
 			//echo "<pre>" . $all->toString() . "</pre>";

@@ -1,6 +1,6 @@
 <?php
 
-Request::getLibrary( "Unit" );
+require_once ROOT . "/libraries/Unit.class.php";
 
 return new Unit( "Unit", function( Unit $unit ){
 

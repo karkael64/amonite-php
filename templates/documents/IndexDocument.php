@@ -2,8 +2,8 @@
 
 if( !class_exists( "IndexDocument" ) ) {
 
-    Request::getComponent( "Navigation" );
-    Request::getComponent( "Unit" );
+    require_once ROOT . "/templates/components/NavigationComponent.php";
+    require_once ROOT . "/templates/components/UnitComponent.php";
 
     class IndexDocument extends Document {
 

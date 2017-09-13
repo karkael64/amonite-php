@@ -10,9 +10,8 @@ if( !class_exists( "Controller" ) ) {
 		const CTRL_PHP = 0x002;
 		const CTRL_HIDDEN = 0x004;
 		const CTRL_NOT_FOUND = 0x008;
-		const CTRL_ADMIN = 0x010;
-		const CTRL_JOKE = 0x020;
-		const ALL_CTRL = 0x03f;
+		const CTRL_JOKE = 0x010;
+		const ALL_CTRL = 0x01f;
 
 		protected $fn_do;
 		protected $fn_priority;
@@ -142,43 +141,6 @@ if( !class_exists( "Controller" ) ) {
 					$filename = $req->env->theme . $req->file . ".php";
 					return file_exists( $filename ) and !is_dir( $filename );
 				} ) );
-
-
-			/*
-			 * $adminController is a controller
-			 * - which execute a file starting by /admin/,
-			 * - run .php or hidden .php or file or send 404.
-			 */
-			if( $mode & self::CTRL_ADMIN )
-				self::register( $adminController = new self( function( Request $req, Response $res ){
-
-					if( function_exists( "should_be_logged" ) ) {
-						should_be_logged();
-					}
-					else {
-						throw new HttpCode( 500, "Test login function not set, then no access to admin!" );
-					}
-
-					$file = preg_replace( '/^\/admin/', '', $req->file );
-					$filename = $req->env->admin . $file;
-					if( preg_match( '/\.ph(p|tml)$/', $file ) and file_exists( $filename ) ) {
-						return File::execFile( $filename, array( "request" => $req, "response" => $res ) );
-					}
-					elseif( file_exists( $filename ) ) {
-						return new File( $filename );
-					}
-					elseif( file_exists( $filename . ".php" ) ) {
-						return File::execFile( $filename . ".php", array( "request" => $req, "response" => $res ) );
-					}
-					else {
-						throw new HttpCode( 404 );
-					}
-
-				}, function( Request $req, Response $res ){
-					if( preg_match( '/^\/admin\//', $req->file ) )
-						return 9;
-					return false;
-				}));
 
 
 			/*
