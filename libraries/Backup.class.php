@@ -13,14 +13,10 @@ if( !class_exists( "Backup" ) ) {
 		const MAX_MONTH = 11;
 		const MAX_YEAR = 99;
 
-		function __construct() {
 
-			$this->autoSave();
-		}
+		// body private functions
 
-
-
-		static function getFileList() {
+		private static function getFileList() {
 			$res = array();
 			$files = scandir( self::$files_folder );
 			foreach( $files as $file ) {
@@ -31,7 +27,7 @@ if( !class_exists( "Backup" ) ) {
 			return $res;
 		}
 
-		static function getBackupList() {
+		private static function getBackupList() {
 			$res = array();
 			$backups = scandir( self::$backup_folder );
 			foreach( $backups as $backup ) {
@@ -42,7 +38,7 @@ if( !class_exists( "Backup" ) ) {
 			return $res;
 		}
 
-		private function getContent() {
+		private static function getContent() {
 			$content = "";
 			$files = self::getFileList();
 			foreach( $files as $file ) {
@@ -52,29 +48,29 @@ if( !class_exists( "Backup" ) ) {
 			return $content;
 		}
 
-		private function autoSave() {
+		private static function autoSave() {
 
-			if( !file_exists( $day_file = $this->getDayName() ) ) {
-				$content = $this->getContent();
+			if( !file_exists( $day_file = self::getDayName() ) ) {
+				$content = self::getContent();
 				file_put_contents( $day_file, $content );
 
-				if( !file_exists( $week_file = $this->getWeekName() ) ) {
+				if( !file_exists( $week_file = self::getWeekName() ) ) {
 					file_put_contents( $week_file, $content );
 
-					if( !file_exists( $month_file = $this->getMonthName() ) ) {
+					if( !file_exists( $month_file = self::getMonthName() ) ) {
 						file_put_contents( $month_file, $content );
 
-						if( !file_exists( $year_file = $this->getYearName() ) ) {
+						if( !file_exists( $year_file = self::getYearName() ) ) {
 							file_put_contents( $year_file, $content );
 						}
 					}
 				}
-				$this->autoRemove();
+				return true;
 			}
-			return $this;
+			return false;
 		}
 
-		private function autoRemove() {
+		private static function autoRemove() {
 
 			$i = 0;
 			$files = self::getBackupList();
@@ -122,27 +118,25 @@ if( !class_exists( "Backup" ) ) {
 			return $i;
 		}
 
-
-
-		private function getDayName() {
+		private static function getDayName() {
 			$dt = new DateTime();
 			$dt->setTimestamp( self::now_ms() );
 			return self::$backup_folder . "/day_" . $dt->format( 'Y-m-d' ) . ".backup";
 		}
 
-		private function getWeekName() {
+		private static function getWeekName() {
 			$dt = new DateTime();
 			$dt->setTimestamp( self::now_ms() );
 			return self::$backup_folder . "/week_" . $dt->format( 'Y-w' ) . ".backup";
 		}
 
-		private function getMonthName() {
+		private static function getMonthName() {
 			$dt = new DateTime();
 			$dt->setTimestamp( self::now_ms() );
 			return self::$backup_folder . "/month_" . $dt->format( 'Y-m' ) . ".backup";
 		}
 
-		private function getYearName() {
+		private static function getYearName() {
 			$dt = new DateTime();
 			$dt->setTimestamp( self::now_ms() );
 			return self::$backup_folder . "/year_" . $dt->format( 'Y' ) . ".backup";
@@ -171,7 +165,21 @@ if( !class_exists( "Backup" ) ) {
 			return substr( $line, 0, 1 ) === "#";
 		}
 
-		static function revertFileWithBackup( $file_path, $backup ) {
+
+		// public functions
+
+		public static function auto() {
+
+			if( self::autoSave() ) {
+				self::autoRemove();
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		public static function revertFileWithBackup( $file_path, $backup ) {
 
 			if( file_exists( $backup ) ) {
 				$file_handler = null;
@@ -180,7 +188,7 @@ if( !class_exists( "Backup" ) ) {
 				while( ( $line = self::readLine( $backup_handler ) ) !== false ) {
 					if( self::isSection( $line ) ) {
 						if( $should_write )
-							return true;
+							break;
 						$file = substr( $line, 1, strlen( $line )-2 );
 						if( $should_write = ( $file === $file_path ) )
 							$file_handler = fopen( $file, 'w' );
@@ -196,7 +204,7 @@ if( !class_exists( "Backup" ) ) {
 			return false;
 		}
 
-		static function revertBackup( $backup ) {
+		public static function revertBackup( $backup ) {
 
 			if( file_exists( $backup ) ) {
 				$file_handler = null;
@@ -219,7 +227,7 @@ if( !class_exists( "Backup" ) ) {
 			return $backup;
 		}
 
-		static function revertDay() {
+		public static function revertDay() {
 			$files = self::getBackupList();
 			$day_files = array();
 
@@ -234,7 +242,7 @@ if( !class_exists( "Backup" ) ) {
 			return self::revertBackup( end( $day_files ) );
 		}
 
-		static function revertWeek() {
+		public static function revertWeek() {
 			$files = self::getBackupList();
 			$week_files = array();
 
@@ -249,7 +257,7 @@ if( !class_exists( "Backup" ) ) {
 			return self::revertBackup( end( $week_files ) );
 		}
 
-		static function revertMonth() {
+		public static function revertMonth() {
 			$files = self::getBackupList();
 			$month_files = array();
 
@@ -264,7 +272,7 @@ if( !class_exists( "Backup" ) ) {
 			return self::revertBackup( end( $month_files ) );
 		}
 
-		static function revertYear() {
+		public static function revertYear() {
 			$files = self::getBackupList();
 			$year_files = array();
 
