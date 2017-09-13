@@ -38,30 +38,19 @@ if( !class_exists( "Backup" ) ) {
 			return $res;
 		}
 
-		private static function getContent() {
-			$content = "";
-			$files = self::getFileList();
-			foreach( $files as $file ) {
-				$content .= "#$file" . "\n";
-				$content .= file_get_contents( $file ) . "\n";
-			}
-			return $content;
-		}
-
 		private static function autoSave() {
 
 			if( !file_exists( $day_file = self::getDayName() ) ) {
-				$content = self::getContent();
-				file_put_contents( $day_file, $content );
+				self::saveAs( $day_file );
 
 				if( !file_exists( $week_file = self::getWeekName() ) ) {
-					file_put_contents( $week_file, $content );
+					copy( $day_file, $week_file );
 
 					if( !file_exists( $month_file = self::getMonthName() ) ) {
-						file_put_contents( $month_file, $content );
+						copy( $day_file, $month_file );
 
 						if( !file_exists( $year_file = self::getYearName() ) ) {
-							file_put_contents( $year_file, $content );
+							copy( $day_file, $year_file );
 						}
 					}
 				}
@@ -118,6 +107,20 @@ if( !class_exists( "Backup" ) ) {
 			return $i;
 		}
 
+		private static function saveAs( $backup_name ) {
+			$backup_handler = fopen( $backup_name, 'w' );
+
+			$files = self::getFileList();
+			foreach( $files as $file ) {
+				self::writeLine( $backup_handler, "#$file" . "\n" );
+				$file_handler = fopen( $file, 'r' );
+				while( ( $line = self::readLine( $file_handler ) ) !== false )
+					self::writeLine( $backup_handler, $line );
+				fclose( $file_handler );
+			}
+			fclose( $backup_handler );
+		}
+
 		private static function getDayName() {
 			$dt = new DateTime();
 			$dt->setTimestamp( self::now_ms() );
@@ -127,7 +130,7 @@ if( !class_exists( "Backup" ) ) {
 		private static function getWeekName() {
 			$dt = new DateTime();
 			$dt->setTimestamp( self::now_ms() );
-			return self::$backup_folder . "/week_" . $dt->format( 'Y-w' ) . ".backup";
+			return self::$backup_folder . "/week_" . $dt->format( 'Y-W' ) . ".backup";
 		}
 
 		private static function getMonthName() {
@@ -155,7 +158,7 @@ if( !class_exists( "Backup" ) ) {
 		}
 
 		private static function writeLine( $handler, $line ) {
-			if( !is_null( $handler ) ) {
+			if( !is_null( $handler ) and strlen( trim( $line ) ) ) {
 				return fputs( $handler, $line );
 			}
 			return null;
