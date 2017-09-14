@@ -89,25 +89,31 @@ if( !class_exists( "RowBSON" ) ) {
 		}
 
 
-		private static $foreign_multiple = array();
-		private static $foreign_unique = array();
+		protected static $foreign_multiple = array();
+		protected static $foreign_unique = array();
 
 		static function registerForeignMultiple( $class_name, $foreign_id_field = null, $self_id_field = self::ID ) {
 			if( is_null( $foreign_id_field ) )
 				$foreign_id_field = self::ID . "_" . file_basename( get_called_class(), "Model" );
-			if( !isset( self::$foreign_multiple[ $class_name ] ) ) {
-				self::$foreign_multiple[ $class_name ] = array();
+			if( !isset( self::$foreign_multiple[ get_called_class() ] ) ) {
+				self::$foreign_multiple[ get_called_class() ] = array();
 			}
-			self::$foreign_multiple[ $class_name ][ $self_id_field ] = $foreign_id_field;
+			if( !isset( self::$foreign_multiple[ get_called_class() ][ $class_name ] ) ) {
+				self::$foreign_multiple[ get_called_class() ][ $class_name ] = array();
+			}
+			self::$foreign_multiple[ get_called_class() ][ $class_name ][ $self_id_field ] = $foreign_id_field;
 		}
 
 		static function registerForeignUnique( $class_name, $self_id_field = null, $foreign_id_field = self::ID ) {
 			if( is_null( $self_id_field ) )
 				$self_id_field = self::ID . "_" . file_basename( $class_name, "Model" );
-			if( !isset( self::$foreign_unique[ $class_name ] ) ) {
-				self::$foreign_unique[ $class_name ] = array();
+			if( !isset( self::$foreign_unique[ get_called_class() ] ) ) {
+				self::$foreign_unique[ get_called_class() ] = array();
 			}
-			self::$foreign_unique[ $class_name ][ $self_id_field ] = $foreign_id_field;
+			if( !isset( self::$foreign_unique[ get_called_class() ][ $class_name ] ) ) {
+				self::$foreign_unique[ get_called_class() ][ $class_name ] = array();
+			}
+			self::$foreign_unique[ get_called_class() ][ $class_name ][ $self_id_field ] = $foreign_id_field;
 		}
 
 		static function issetForeign( $class_name ) {
@@ -115,23 +121,23 @@ if( !class_exists( "RowBSON" ) ) {
 		}
 
 		static function issetForeignMultiple( $class_name ) {
-			return isset( self::$foreign_multiple[ $class_name ] );
+			return isset( self::$foreign_multiple[ get_called_class() ][ $class_name ] );
 		}
 
 		static function issetForeignUnique( $class_name ) {
-			return isset( self::$foreign_unique[ $class_name ] );
+			return isset( self::$foreign_unique[ get_called_class() ][ $class_name ] );
 		}
 
 
 		function getForeignAsArray( $class_name, $fields = null, $where = array(), $limit = 0, $start_at = 0 ) {
 			if( self::issetForeignMultiple( $class_name ) and class_exists( $class_name ) ) {
-				foreach( self::$foreign_multiple[ $class_name ] as $self_id_field => $foreign_id_field ) {
+				foreach( self::$foreign_multiple[ get_called_class() ][ $class_name ] as $self_id_field => $foreign_id_field ) {
 					$where[ $foreign_id_field ] = $this->__get( $self_id_field );
 				}
 				return $class_name::select( $fields, $where, $limit, $start_at );
 			}
 			if( self::issetForeignUnique( $class_name ) and class_exists( $class_name ) ) {
-				foreach( self::$foreign_unique[ $class_name ] as $self_id_field => $foreign_id_field ) {
+				foreach( self::$foreign_unique[ get_called_class() ][ $class_name ] as $self_id_field => $foreign_id_field ) {
 					$where[ $foreign_id_field ] = $this->__get( $self_id_field );
 				}
 				return $class_name::selectFirst( $fields, $where, $start_at );
@@ -141,13 +147,13 @@ if( !class_exists( "RowBSON" ) ) {
 
 		function getForeign( $class_name, $fields = null, $where = array(), $limit = 0, $start_at = 0 ) {
 			if( self::issetForeignMultiple( $class_name ) and class_exists( $class_name ) ) {
-				foreach( self::$foreign_multiple[ $class_name ] as $self_id_field => $foreign_id_field ) {
+				foreach( self::$foreign_multiple[ get_called_class() ][ $class_name ] as $self_id_field => $foreign_id_field ) {
 					$where[ $foreign_id_field ] = $this->__get( $self_id_field );
 				}
 				return $class_name::arrayToModel( $class_name::select( $fields, $where, $limit, $start_at ) );
 			}
 			if( self::issetForeignUnique( $class_name ) and class_exists( $class_name ) ) {
-				foreach( self::$foreign_unique[ $class_name ] as $self_id_field => $foreign_id_field ) {
+				foreach( self::$foreign_unique[ get_called_class() ][ $class_name ] as $self_id_field => $foreign_id_field ) {
 					$where[ $foreign_id_field ] = $this->__get( $self_id_field );
 				}
 				return new $class_name( $class_name::selectFirst( $fields, $where, $start_at ) );
@@ -166,13 +172,13 @@ if( !class_exists( "RowBSON" ) ) {
 		function addForeign( $class_name, $value ) {
 			if( self::issetForeignMultiple( $class_name ) and class_exists( $class_name ) ) {
 				if( is_array( $value ) ) {
-					foreach( self::$foreign_multiple[ $class_name ] as $self_id_field => $foreign_id_field ) {
+					foreach( self::$foreign_multiple[ get_called_class() ][ $class_name ] as $self_id_field => $foreign_id_field ) {
 						$value[ $foreign_id_field ] = $this->__get( $self_id_field );
 					}
 					return new $class_name( $class_name::insert( $value ) );
 				}
 				elseif( ( $value instanceof self ) and ( get_class( $value ) === $class_name ) ) {
-					foreach( self::$foreign_multiple[ $class_name ] as $self_id_field => $foreign_id_field ) {
+					foreach( self::$foreign_multiple[ get_called_class() ][ $class_name ] as $self_id_field => $foreign_id_field ) {
 						$value->__set( $foreign_id_field, $this->__get( $self_id_field ) );
 					}
 					return $value->save();
