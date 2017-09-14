@@ -100,8 +100,8 @@ if( !class_exists( "RowPDO" ) ) {
 		}
 
 		static function registerForeignUnique( $class_name, $self_id_field = null, $foreign_id_field = self::ID ) {
-			if( is_null( $foreign_id_field ) )
-				$foreign_id_field = self::ID . "_" . file_basename( $class_name, "Model" );
+			if( is_null( $self_id_field ) )
+				$self_id_field = self::ID . "_" . file_basename( $class_name, "Model" );
 			if( !isset( self::$foreign_unique[ $class_name ] ) ) {
 				self::$foreign_unique[ $class_name ] = array();
 			}
