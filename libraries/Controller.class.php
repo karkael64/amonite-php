@@ -82,6 +82,9 @@ if( !class_exists( "Controller" ) ) {
 			return $selected;
 		}
 
+
+		static $theme_path;
+
 		static function autoRegister( $mode = self::CTRL_FILE ) {
 
 
@@ -105,10 +108,10 @@ if( !class_exists( "Controller" ) ) {
 			 */
 			if( $mode & self::CTRL_FILE )
 				self::register( $fileController = new self( function( Request $req, Response $res ) {
-					$filename = $req->env->theme . $req->file;
+					$filename = self::$theme_path . $req->file;
 					return new File( $filename );
 				}, function( $req, $res ) {
-					$filename = $req->env->theme . $req->file;
+					$filename = self::$theme_path . $req->file;
 					return !preg_match( '/(\.php|\.phtml)$/', $filename ) and file_exists( $filename ) and !is_dir( $filename );
 				} ) );
 
@@ -120,10 +123,10 @@ if( !class_exists( "Controller" ) ) {
 			 */
 			if( $mode & self::CTRL_PHP )
 				self::register( $execController = new self( function( Request $req, Response $res ) { // do execute a file
-					$filename = $req->env->theme . $req->file;
+					$filename = self::$theme_path . $req->file;
 					return File::execFile( $filename, array( "request" => $req, "response" => $res ) );
 				}, function( $req, $res ) { // if
-					$filename = $req->env->theme . $req->file;
+					$filename = self::$theme_path . $req->file;
 					return preg_match( '/(\.php|\.phtml)$/', $filename ) and file_exists( $filename ) and !is_dir( $filename );
 				} ) );
 
@@ -135,10 +138,10 @@ if( !class_exists( "Controller" ) ) {
 			 */
 			if( $mode & self::CTRL_HIDDEN )
 				self::register( $hiddenExecController = new self( function( Request $req, Response $res ) {
-					$filename = $req->env->theme . $req->file . ".php";
+					$filename = self::$theme_path . $req->file . ".php";
 					return File::execFile( $filename, array( "request" => $req, "response" => $res ) );
 				}, function( $req, $res ) {
-					$filename = $req->env->theme . $req->file . ".php";
+					$filename = self::$theme_path . $req->file . ".php";
 					return file_exists( $filename ) and !is_dir( $filename );
 				} ) );
 

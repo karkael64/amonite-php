@@ -236,12 +236,14 @@ if( !class_exists( "ModelBSON" ) ) {
 
 		//  CONSTANTS
 
+		static $datafiles_path;
+
 		static private function getFilePath() {
-			return Request::i()->env->datas . "/" . self::getName() . ".bson";
+			return self::$datafiles_path . "/" . self::getName() . ".bson";
 		}
 
 		static private function getTempPath() {
-			return Request::i()->env->datas . "/" . self::getName() . ".bson_temp";
+			return self::$datafiles_path . "/" . self::getName() . ".bson_temp";
 		}
 
 
@@ -290,8 +292,12 @@ if( !class_exists( "ModelBSON" ) ) {
 						elseif( $k == self::KEY_IN && !self::check_conditions_in( $data, $w ) )
 							return false;
 
-						elseif( !isset( $data[ $k ] ) && ( $w === null ) )
-							continue;
+						elseif( !isset( $data[ $k ] ) ) {
+							if( $w === null )
+								continue;
+							else
+								return false;
+						}
 						elseif( $data[ $k ] !== $w )
 							return false;
 					}
@@ -317,8 +323,12 @@ if( !class_exists( "ModelBSON" ) ) {
 						elseif( $k == self::KEY_IN && self::check_conditions_in_or( $data, $w ) )
 							return true;
 
-						if( !isset( $data[ $k ] ) && ( $w === null ) )
-							return true;
+						elseif( !isset( $data[ $k ] ) ) {
+							if( $w === null )
+								return true;
+							else
+								continue;
+						}
 						if( $data[ $k ] === $w )
 							return true;
 					}

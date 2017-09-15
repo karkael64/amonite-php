@@ -27,6 +27,9 @@ Response::send( function( Request $req, Response $res ) {
 	HttpCode::$DEBUG_MODE = $req::isLocal();
 	$sub = $req::getSubWebsiteName( "main" );
 
+	Controller::$theme_path = realpath( ROOT . "/themes/" . $sub );
+	ModelBSON::$datafiles_path = realpath( ROOT . "/datas/files" );
+
 	$req->env = array(
 		"theme" => realpath( ROOT . "/themes/" . $sub ),
 		"documents" => realpath( ROOT . "/templates/documents" ),
