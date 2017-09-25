@@ -175,6 +175,10 @@ if( !class_exists( "ModelBSON" ) ) {
 					$row[ self::ID ] = self::nextId();
 				}
 
+				foreach( $row as $field => $value )
+					if( is_null( $value ) )
+						unset( $row[ $field ] );
+
 				$row = json_encode( $row ) . "\n";
 				fputs( self::$handler_temp, $row );
 			}
