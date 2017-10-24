@@ -9,8 +9,6 @@ if( !class_exists( "ModelBSON" ) ) {
 
 		//  QUERIES
 
-		// TODO: foreign keys
-
 		const ID = "id";
 
 		static function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ) {

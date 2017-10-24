@@ -17,7 +17,7 @@ if( !class_exists( "NavigationComponent" ) ) {
 
             $h = new HttpCode( 200, array( "success" => true, "count" => $n->count() ) );
 			$h->setMime( "application/json" );
-            throw $h;
+            return $h; //throw $h;
 		}
 
 		function getComponent( Request $req, Response $res ) {

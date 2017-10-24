@@ -10,24 +10,44 @@ if( !class_exists( "Component" ) ) {
 
 		abstract public function getComponent( Request $req, Response $res );
 
+		private function getCall() {
+
+			if( Request::getArg( "component" ) === $this->getName() ) {
+				Observer::start_chunk();
+				$content = $this->onCall( Request::i(), Response::getInstance() );
+				if( is_null( $content ) ) {
+					$content = Observer::end_chunk();
+					if( !strlen( $content ) )
+						$content = null;
+				}
+				return $content;
+			}
+			return null;
+		}
+
 		public function getInner() {
 
 			Observer::start_chunk();
-
-			$this->setMime( "text/html" );
-			$this->setCharset( "utf-8" );
-
-			if( Request::getArg( "component" ) === file_basename( get_class( $this ), get_class() ) ) {
-				$this->onCall( Request::i(), Response::getInstance() );
-			}
-
 			$content = $this->getComponent( Request::i(), Response::getInstance() );
-			return strlen( $content ) ? $content : Observer::end_chunk();
+			if( is_null( $content ) ) {
+				$content = Observer::end_chunk();
+				if( !strlen( $content ) )
+					$content = null;
+			}
+			return $content;
 		}
 
 		public function getContent() {
 
-			$c = $this->getInner();
+			$this->setMime( "text/html" );
+			$this->setCharset( "utf-8" );
+
+			if( is_null( $c = $this->getCall() ) and is_null( $c = $this->getInner() ) )
+				$c = "";
+
+			if( !is_string( $c ) )
+				$c = to_string( $c );
+
 			$v = sha1( $c );
 			$n = $this->getName();
 

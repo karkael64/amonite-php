@@ -15,9 +15,9 @@ if( !class_exists( "UnitComponent" ) ) {
 
 			$all = new Unit( "Unit tests" );
 
-			$all->section( require_once ( ROOT . "/libraries/units/Unit.unit.php" ) );
-			$all->section( require_once ( ROOT . "/libraries/units/CustomException.unit.php" ) );
-			$all->section( require_once ( ROOT . "/libraries/units/Component.unit.php" ) );
+			$all->section( require ( ROOT . "/libraries/units/Unit.unit.php" ) );
+			$all->section( require ( ROOT . "/libraries/units/CustomException.unit.php" ) );
+			$all->section( require ( ROOT . "/libraries/units/Component.unit.php" ) );
 
 			echo $all->toMime( $this->mime );
 			//echo "<pre>" . $all->toString() . "</pre>";

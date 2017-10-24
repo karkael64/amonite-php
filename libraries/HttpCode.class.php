@@ -11,7 +11,7 @@ if( !class_exists( "HttpCode" ) ) {
 			if( !( $previous instanceof Throwable ) and !( $previous instanceof Exception ) )
 				$previous = null;
 
-			parent::__construct( to_string_exec( $message ), $code, $previous );
+			parent::__construct( to_string( $message ), $code, $previous );
 
 			// MIME
 			if( $mime = Content::getFilenameMime( Request::getFilename() ) ) {
@@ -88,10 +88,12 @@ if( !class_exists( "HttpCode" ) ) {
 		);
 
 
+
 		public function getDefaultMessage() {
 			$code = $this->getCode();
 			return isset( self::$http[ $code ] ) ? self::$http[ $code ][ self::KEY_MSG ] : self::$http[ "default" ][ self::KEY_MSG ];
 		}
+
 
 
 		//	ANSWERABLE
@@ -115,6 +117,8 @@ if( !class_exists( "HttpCode" ) ) {
 			return $this;
 		}
 
+
+
 		protected $mime = "text/plain";
 
 		public function setMime( $mime ) {
@@ -129,10 +133,10 @@ if( !class_exists( "HttpCode" ) ) {
 			return $this;
 		}
 
-
 		public function getContent() {
 			return $this->toMime();
 		}
+
 
 
 		//	HTTP CODE
@@ -218,6 +222,50 @@ if( !class_exists( "HttpCode" ) ) {
 				return $this->toHTML();
 			else
 				return $this->toString();
+		}
+
+		static function getWrapped( $el ) {
+
+			if( $el instanceof self )
+				return $el;
+
+			if( $el instanceof Throwable or $el instanceof Exception )
+				return new HttpCode( 500, "Throwable catched.", $el );
+
+			try {
+
+				while( $el instanceof Closure or $el instanceof Answerable ) {
+
+					if( $el instanceof Closure )
+						$el = call_user_func_array( $el, array( Request::getInstance(), Response::getInstance() ) );
+
+					if( $el instanceof Answerable )
+						$el = $el->getContent();
+				}
+
+				if( !strlen( $el ) )
+					return new HttpCode( 204, "" );
+				if( sha1( $el ) === Request::getEtag() )
+					return new HttpCode( 304, "" );
+				else
+					return new HttpCode( 200, $el );
+			}
+			catch( HttpCode $el ) {
+				ob_get_clean();
+				return $el;
+			}
+			catch( Throwable $el ) {
+				ob_get_clean();
+				return new HttpCode( 500, "Throwable catched.", $el );
+			}
+			catch( Exception $el ) {
+				ob_get_clean();
+				return new HttpCode( 500, "Throwable catched.", $el );
+			}
+		}
+
+		static function send( $el ) {
+			Response::getInstance()->sendAnswerable( self::getWrapped( $el ) );
 		}
 	}
 

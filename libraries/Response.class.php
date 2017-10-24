@@ -22,33 +22,9 @@ if( !class_exists( "Response" ) ) {
 				return self::$instance = new self;
 		}
 
-		static function getAnswerable( $el ) {
-
-			if( $el instanceof Answerable )
-				return $el;
-
-			elseif( $el instanceof Throwable )
-				return new HttpCode( 500, "Throwable catched.", $el );
-
-			elseif( $el instanceof Exception )
-				return new HttpCode( 500, "Throwable catched.", $el );
-
-			elseif( is_callable( $el ) )
-				return self::getAnswerable( call_user_func_array( $el, array( Request::getInstance(), Response::getInstance() ) ) );
-
-			elseif( is_string( $el = to_string( $el ) ) ) {
-				if( !strlen( $el ) )
-					return new HttpCode( 204, "" );
-				if( sha1( $el ) === Request::getEtag() )
-					return new HttpCode( 304, "" );
-				else
-					return new HttpCode( 200, $el );
-			}
-
-			else
-				return ( new HttpCode( 500, new TypeException( "Parameter is not Answerable object nor can be casted to a String." ) ) );
+		static function i() {
+			return self::getInstance();
 		}
-
 
 		private function sendHeader( $code, $title, $etag, $len ) {
 
@@ -82,24 +58,15 @@ if( !class_exists( "Response" ) ) {
 
 		public function sendAnswerable( Answerable $el ) {
 
-			if( $el instanceof HttpCode ) {
+			$this->sendHttpCode( HttpCode::getWrapped( $el ) );
+		}
 
-				if( ( $code = $el->getCode() ) < 300 )
-					$content = $el->getMessage();
-				else
-					$content = to_string( $el->getContent() );
-			}
-			else {
+		public function sendHttpCode( HttpCode $el ) {
 
+			if( ( $code = $el->getCode() ) < 300 )
+				$content = $el->getMessage();
+			else
 				$content = to_string( $el->getContent() );
-
-				if( $content === "" )
-					$el = new HttpCode( $code = 204, "" );
-				elseif( sha1( $content ) === Request::getEtag() )
-					$el = new HttpCode( $code = 304, "" );
-				else
-					$el = new HttpCode( $code = 200, $content );
-			}
 
 			if( $code === 307 || $code === 308 ) {
 				$this->setHeader( "Location", $el->getMessage() );
@@ -121,17 +88,7 @@ if( !class_exists( "Response" ) ) {
 
 		static function send( $el ) {
 
-			try {
-				return self::getInstance()->sendAnswerable( self::getAnswerable( $el ) );
-			}
-			catch( Throwable $answer ) {
-				ob_clean();
-				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
-			}
-			catch( Exception $answer ) {
-				ob_clean();
-				return self::getInstance()->sendAnswerable( self::getAnswerable( $answer ) );
-			}
+			return self::getInstance()->sendHttpCode( HttpCode::getWrapped( $el ) );
 		}
 
 
@@ -160,7 +117,8 @@ if( !class_exists( "Response" ) ) {
 		}
 
 		function removeCookie( $field ) {
-			unset( $this->cookie[ $field ] );
+			$this->cookie[ $field ][ 1 ] = null;
+			$this->cookie[ $field ][ 1 ] = -1;
 			return $this;
 		}
 
