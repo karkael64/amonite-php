@@ -189,21 +189,23 @@ if( !class_exists( "RowBSON" ) ) {
 
 			if( class_exists( $name ) and is_subclass_of( $name, get_class() ) ) {
 
-				if( isset( $args[ 0 ] ) ) {
-					$obj = $args[ 0 ];
-					if( is_array( $obj ) )
-						$obj = new $name( $obj );
-					elseif( !( is_object( $obj ) and $args instanceof $name ) )
-						$obj = new $name();
+				$obj = null;
+				if( is_array( $args ) ) {
+					$obj = new $name( $args );
+				}
+				elseif( $args instanceof $name ) {
+					$obj = $args;
 				}
 
-				$obj->__set( $id_field, $this->__get( self::ID ) );
-				$obj->save();
+				if( $obj instanceof self ) {
+					$obj->__set( $id_field, $this->__get( self::ID ) );
+					$obj->save();
 
-				if( $toModel )
-					return $obj;
-				else
-					return $obj->toArray();
+					if( $toModel )
+						return $obj;
+					else
+						return $obj->toArray();
+				}
 			}
 			else {
 				throw new Exception( "Class $name not found." );
