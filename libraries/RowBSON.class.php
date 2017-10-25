@@ -210,6 +210,7 @@ if( !class_exists( "RowBSON" ) ) {
 			else {
 				throw new Exception( "Class $name not found." );
 			}
+			return null;
 		}
 	}
 }
