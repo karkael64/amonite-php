@@ -234,13 +234,21 @@ if( !class_exists( "HttpCode" ) ) {
 
 			try {
 
-				while( $el instanceof Closure or $el instanceof Answerable ) {
+				while( !is_string( $el ) ) {
 
-					if( $el instanceof Closure )
+					if( $el instanceof Closure ) {
 						$el = call_user_func_array( $el, array( Request::getInstance(), Response::getInstance() ) );
+						continue;
+					}
 
-					if( $el instanceof Answerable )
+					if( $el instanceof Answerable ) {
 						$el = $el->getContent();
+						continue;
+					}
+
+					if( !is_string( $el ) ) {
+						$el = to_string( $el );
+					}
 				}
 
 				if( !strlen( $el ) )

@@ -20,6 +20,9 @@ if( !class_exists( "Component" ) ) {
 					if( !strlen( $content ) )
 						$content = null;
 				}
+				else {
+					Observer::end_chunk();
+				}
 				return $content;
 			}
 			return null;
@@ -33,6 +36,9 @@ if( !class_exists( "Component" ) ) {
 				$content = Observer::end_chunk();
 				if( !strlen( $content ) )
 					$content = null;
+			}
+			else {
+				Observer::end_chunk();
 			}
 			return $content;
 		}
