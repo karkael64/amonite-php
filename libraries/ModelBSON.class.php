@@ -16,13 +16,18 @@ if( !class_exists( "ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "select";
 			self::$last_counter = 0;
-			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
-				self::$last_counter++;
-				if( self::filterWhere( $row, $where ) ) {
-					if( $start_at > 0 )
-						$start_at--;
-					else
-						array_push( $res, self::filterFields( $row, $fields ) );
+			if( $fields instanceof Closure ) {
+				while( ( $row = self::getRow() ) and !call_user_func( $fields, $res, $row ) ) {}
+			}
+			else {
+				while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+					self::$last_counter++;
+					if( self::filterWhere( $row, $where ) ) {
+						if( $start_at > 0 )
+							$start_at--;
+						else
+							array_push( $res, self::filterFields( $row, $fields ) );
+					}
 				}
 			}
 			self::endReading();
@@ -33,15 +38,22 @@ if( !class_exists( "ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "selectFirst";
 			self::$last_counter = 0;
-			while( $row = self::getRow() ) {
-				self::$last_counter++;
-				if( self::filterWhere( $row, $where ) ) {
-					if( $start_at > 0 )
-						$start_at--;
-					else {
-						$row = self::filterFields( $row, $fields );
-						self::endReading();
-						return $row;
+			if( $fields instanceof Closure ) {
+				$res = null;
+				while( ( $row = self::getRow() ) and !call_user_func( $fields, $res, $row ) ) {}
+				return $res;
+			}
+			else {
+				while( $row = self::getRow() ) {
+					self::$last_counter++;
+					if( self::filterWhere( $row, $where ) ) {
+						if( $start_at > 0 )
+							$start_at--;
+						else {
+							$row = self::filterFields( $row, $fields );
+							self::endReading();
+							return $row;
+						}
 					}
 				}
 			}
@@ -55,18 +67,23 @@ if( !class_exists( "ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "update";
 			self::$last_counter = 0;
-			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
-				self::$last_counter++;
-				if( self::filterWhere( $row, $where ) ) {
-					if( $start_at > 0 ) {
-						$start_at--;
-						self::setRow( $row );
+			if( $value instanceof Closure ) {
+				while( ( $row = self::getRow() ) and !call_user_func( $value, $res, $row ) ) {}
+			}
+			else {
+				while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
+					self::$last_counter++;
+					if( self::filterWhere( $row, $where ) ) {
+						if( $start_at > 0 ) {
+							$start_at--;
+							self::setRow( $row );
+						} else {
+							array_push( $res, $row );
+							self::setRow( array_merge( $row, $value ) );
+						}
 					} else {
-						array_push( $res, $row );
-						self::setRow( array_merge( $row, $value ) );
+						self::setRow( $row );
 					}
-				} else {
-					self::setRow( $row );
 				}
 			}
 			self::endReading();
@@ -76,21 +93,60 @@ if( !class_exists( "ModelBSON" ) ) {
 
 		static function insert( $value = array() ) {
 
-			if( !self::$handler ) {
-				if( is_array( $value ) ) {
-
-					$value[ self::ID ] = self::nextId();
+			if( $value instanceof Closure ) {
+				$result = array();
+				while( !( $res = call_user_func( $value ) ) ) {
+					$res[ self::ID ] = self::nextId();
 					$handler = fopen( self::getFilePath(), 'a' );
 					fputs( $handler, json_encode( $value ) . "\n" );
 					fclose( $handler );
-
-					return $value;
+					$result[] = $res;
 				}
-			} else {
-				throw new Exception( "Already reading in file " . self::getName() . "." );
+				return $result;
+			}
+			else {
+				if( !self::$handler ) {
+					if( is_array( $value ) ) {
+
+						$value[ self::ID ] = self::nextId();
+						$handler = fopen( self::getFilePath(), 'a' );
+						fputs( $handler, json_encode( $value ) . "\n" );
+						fclose( $handler );
+
+						return $value;
+					}
+				} else {
+					throw new Exception( "Already reading in file " . self::getName() . "." );
+				}
 			}
 
 			return null;
+		}
+
+		static function count( $where = array(), $limit = 0, $start_at = 0 ) {
+			$res = 0;
+			self::startReading();
+			self::$last_method = "count";
+			self::$last_counter = 0;
+			if( $where instanceof Closure ) {
+				while( $row = self::getRow() ) {
+					if( call_user_func( $where, $row ) )
+						$res++;
+				}
+			}
+			else {
+				while( ( $row = self::getRow() ) and ( !$limit or ( $limit < $res ) ) ) {
+					self::$last_counter++;
+					if( self::filterWhere( $row, $where ) ) {
+						if( $start_at > 0 )
+							$start_at--;
+						else
+							$res++;
+					}
+				}
+			}
+			self::endReading();
+			return $res;
 		}
 
 		static function remove( array $where, $limit = 0, $start_at = 0 ) {
@@ -114,24 +170,6 @@ if( !class_exists( "ModelBSON" ) ) {
 			}
 			self::endReading();
 			self::endWritingTemp();
-			return $res;
-		}
-
-		static function count( $where = array(), $limit = 0, $start_at = 0 ) {
-			$res = 0;
-			self::startReading();
-			self::$last_method = "count";
-			self::$last_counter = 0;
-			while( ( $row = self::getRow() ) and ( !$limit or ( $limit < $res ) ) ) {
-				self::$last_counter++;
-				if( self::filterWhere( $row, $where ) ) {
-					if( $start_at > 0 )
-						$start_at--;
-					else
-						$res++;
-				}
-			}
-			self::endReading();
 			return $res;
 		}
 
