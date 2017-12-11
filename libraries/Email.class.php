@@ -4,7 +4,7 @@ if( !class_exists( "Email" ) ) {
 
     class Email {
 
-        const ADMIN_EMAIL =       "webmaster@sem-rscc.fr";
+        const ADMIN_EMAIL =       "webmaster@sem-rscc.org.fr";
         const ADMIN_EMAIL_NAME =  "SEM RSCC Webmaster";
         const ADMIN_ERROR_TITLE = "Admin Error Report";
         const SITE_NAME =         "SEM RSCC";

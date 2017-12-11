@@ -73,7 +73,7 @@ if( !class_exists( "Controller" ) ) {
 			$selected = null;
 			foreach( self::$list as $controller ) {
 				if( $controller instanceof self ) {
-					if( ( $p = $controller->getPriority( $args_where ) ) >= $max ) {
+					if( ( $p = $controller->getPriority( $args_where ) ) > $max ) {
 						$max = $p;
 						$selected = $controller;
 					}
