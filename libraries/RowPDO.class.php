@@ -181,7 +181,7 @@ if( !class_exists( "RowPDO" ) ) {
 			$field = file_basename( get_called_class(), "Model" );
 			$id_field = "id_$field";
 
-			if( class_exists( $name . "Model" ) )
+			if( !class_exists( $name ) and class_exists( $name . "Model" ) )
 				$name .= "Model";
 
 			if( class_exists( $name ) and is_subclass_of( $name, get_class() ) ) {

@@ -109,7 +109,7 @@ if( !class_exists( "Content" ) ) {
 		}
 
 		public function addCookie( $field, $value, $expires = NULL, $domain = NULL, $path = NULL, $secure = false, $httpOnly = false ) {
-			Response::getInstance()->addCookie( $field, $value, $expires = NULL, $domain = NULL, $path = NULL, $secure = false, $httpOnly = false );
+			Response::getInstance()->addCookie( $field, $value, $expires, $domain, $path, $secure, $httpOnly );
 			return $this;
 		}
 
