@@ -30,9 +30,7 @@ if( !class_exists( "Response" ) ) {
 
 			header( Request::i()->PROTOCOL . " $code $title", true, $code );
 
-			if( !Request::denyCache() ) {
-				$this->setHeader( "Etag", $etag );
-			}
+			$this->setHeader( "Etag", $etag );
 
 			foreach( $this->header as $field => $header ) {
 				if( $field !== "Set-cookie" )
@@ -42,10 +40,8 @@ if( !class_exists( "Response" ) ) {
 			header( "Content-Type: " . $this->mime . "; charset=" . $this->charset, true );
 			header( "Content-length: " . $len );
 
-			if( !Request::denyCookie() ) {
-				foreach( $this->cookie as $cookie )
-					setcookie( $cookie[ 0 ], $cookie[ 1 ], $cookie[ 2 ], $cookie[ 3 ], $cookie[ 4 ], $cookie[ 5 ], $cookie[ 6 ] );
-			}
+			foreach( $this->cookie as $cookie )
+				setcookie( $cookie[ 0 ], $cookie[ 1 ], $cookie[ 2 ], $cookie[ 3 ], $cookie[ 4 ], $cookie[ 5 ], $cookie[ 6 ] );
 
 			return $this;
 		}
