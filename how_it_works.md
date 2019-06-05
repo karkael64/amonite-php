@@ -33,6 +33,8 @@ The `ROOT` constant has for value the directory of this project, for example "/v
 Controller is a register composed with Controller instances. Every controllers registered executes their "priority" function, and the highest number returned determines the controller to execute. A controller instance is composed with two functions: a function to execute if the second function "priority" returns higher number :
 
 ``` PHP
+<?php
+
 $execute = function ( Request $req, Response $res ) {
   return "<pre>Hello, World!</pre>";
 }
@@ -48,6 +50,8 @@ The HTTP entry points of the default controllers are in folder sets here :
 
 
 ``` PHP
+<?php
+
 Controller::$theme_path = realpath( ROOT . "/themes/" );
 ```
 
@@ -61,6 +65,8 @@ A backup is a file which helps to retrieve data or show its evolution in time. W
 Easily Backup files with one of this lines:
 
 ``` PHP
+<?php
+
 Backup::revertDay();
 Backup::revertWeek();
 Backup::revertMonth();
@@ -72,6 +78,8 @@ Backup::revertFileWithBackup( $dest_filepath, $backup_filepath );
 The default configuration:
 
 ``` PHP
+<?php
+
 Backup::$backup_folder = ROOT . "/databases/backup";   // backup files are saved in this directory, named with creation date.
 Backup::$files_folder = ROOT . "/databases/datafiles"; // directory's files saved in backup.
 ```
@@ -82,6 +90,8 @@ Backup::$files_folder = ROOT . "/databases/datafiles"; // directory's files save
 When an error is triggered, the PHP throw errors in HTML format and is never catched by the user. By initializing this error catcher, errors are treated, returned in the format expected : HTML, JSON or a plain string.
 
 ``` PHP
+<?php
+
 CustomException::set_error_handler();
 CustomException::set_fatal_handler();
 ```
@@ -92,6 +102,8 @@ CustomException::set_fatal_handler();
 You can get errors more verbose by setting:
 
 ``` PHP
+<?php
+
 HttpCode::$DEBUG_MODE = true;
 ```
 
@@ -136,6 +148,8 @@ A Request instance sets attributes as constants.
 Email configuration helps you to identify a user to send an email in case of any error.
 
 ``` PHP
+<?php
+
 Email::$ADMIN_EMAIL =       "webmaster@your.site";
 Email::$ADMIN_EMAIL_NAME =  "Webmaster";
 Email::$ADMIN_ERROR_TITLE = "Admin Error Report";
@@ -145,6 +159,8 @@ Email::$SITE_NAME =         "Your Site";
 Then you just have to send an email to admin with :
 
 ``` PHP
+<?php
+
 Email::AdminError("Your message here!");
 ```
 
@@ -154,6 +170,8 @@ Email::AdminError("Your message here!");
 Every ModelBSON child classes read files in this directory :
 
 ``` PHP
+<?php
+
 ModelBSON::$datafiles_path = realpath( ROOT . "/datas/files" );
 ```
 

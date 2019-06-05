@@ -25,7 +25,7 @@
  `/amonite.phar`
 
  May be you would like use it with default config. Then just call it like :
- ```
+ ``` PHP
  <?php
 
  // Get library
@@ -50,7 +50,7 @@
  You can enhance the engine with Document / Component model or you can create any class that extends `Content` class or implements `Answerable` interface. In example :
 
 __File : /templates/documents/IndexDocument.php__
- ```
+ ``` PHP
  <?php
 
  Request::i()->env->components = ROOT . "/templates/components";
@@ -75,7 +75,7 @@ __File : /templates/documents/IndexDocument.php__
  ```
 
 __File : /templates/components/NavComponent.php__
- ```
+ ``` PHP
  <?php
 
  class NavComponent extends Component {
@@ -109,7 +109,7 @@ __File : /templates/components/NavComponent.php__
  ```
 
 __File : /theme/main/index.html.php__
- ```
+ ``` PHP
  <?php
 
  Request::i()->env->documents = ROOT . "/theme/main";
@@ -122,9 +122,13 @@ __File : /theme/main/index.html.php__
  ```
 
 ### Database management : ModelBSON / ModelPDO model
- You can enhance the engine with ModelBSON / ModelPDO model or you can create any class that implements `Model` interface. Use one of these Model, then  In example :
- ```
- interface Model {
+
+You can enhance the engine with ModelBSON / ModelPDO model or you can create any class that implements `Model` interface. Use one of these Model, then  In example :
+
+``` PHP
+<?php
+
+interface Model {
 
      public function __construct( $name = "" );
 
@@ -139,4 +143,4 @@ __File : /theme/main/index.html.php__
 
 ## Documentation & References
 
-[Documentation & References](#)
+[Documentation & References](how_it_works.md)
