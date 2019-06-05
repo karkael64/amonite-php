@@ -4,10 +4,10 @@ if( !class_exists( "Email" ) ) {
 
     class Email {
 
-        const ADMIN_EMAIL =       "webmaster@sem-rscc.org.fr";
-        const ADMIN_EMAIL_NAME =  "SEM RSCC Webmaster";
-        const ADMIN_ERROR_TITLE = "Admin Error Report";
-        const SITE_NAME =         "SEM RSCC";
+        static $ADMIN_EMAIL;
+        static $ADMIN_EMAIL_NAME;
+        static $ADMIN_ERROR_TITLE;
+        static $SITE_NAME;
 
         private $from =    null;
         private $to =      null;
@@ -265,10 +265,15 @@ Content-Disposition: attachment; filename=\"$file_name\"
         static function AdminError( $message = null ) {
 
             return Email::instance()
-                ->setTo( self::ADMIN_EMAIL, self::ADMIN_EMAIL_NAME )
-                ->setSubject( self::SITE_NAME . ':' . self::ADMIN_ERROR_TITLE )
+                ->setTo( self::$ADMIN_EMAIL, self::$ADMIN_EMAIL_NAME )
+                ->setSubject( self::$SITE_NAME . ':' . self::$ADMIN_ERROR_TITLE )
                 ->setBody( $message )
                 ->send();
         }
     }
+
+    Email::$ADMIN_EMAIL =       "webmaster@your.site";
+    Email::$ADMIN_EMAIL_NAME =  "Webmaster";
+    Email::$ADMIN_ERROR_TITLE = "Admin Error Report";
+    Email::$SITE_NAME =         "Your Site";
 }

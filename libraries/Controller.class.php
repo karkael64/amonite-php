@@ -32,7 +32,7 @@ if( !class_exists( "Controller" ) ) {
 
 			if( is_callable( $this->fn_priority ) )
 				return +call_user_func_array( $this->fn_priority, $args_where );
-			elseif( is_numeric( $args_where ) )
+			elseif( is_numeric( $this->fn_priority ) )
 				return +$this->fn_priority;
 			else
 				return self::NOT;
@@ -89,12 +89,12 @@ if( !class_exists( "Controller" ) ) {
 
 
 			/*
-			 * $fileController is a controller
-			 *  -   which read a file
-			 *  -   if file does not end with .php nor .phtml
+			 * $jokeController is a controller
+			 *  -   which send "i'm a teapot"
+			 *  -   if method is "brew"
 			 */
 			if( $mode & self::CTRL_JOKE )
-				self::register( $fileController = new self( function( Request $req, Response $res ) {
+				self::register( $jokeController = new self( function( Request $req, Response $res ) {
 					return new HttpCode( 418 );
 				}, function( Request $req, Response $res ) {
 					return $req::getMethod() === "BREW";
@@ -133,8 +133,8 @@ if( !class_exists( "Controller" ) ) {
 
 			/*
 			 * $hiddenExecController is a controller
-			 *  -   which execute a file name with .php at the end
-			 *  -   if file does not exists but his name with .php at the end exists
+			 *  -   which execute a file name with .php added at the end
+			 *  -   if file name with .php added at the end exists
 			 */
 			if( $mode & self::CTRL_HIDDEN )
 				self::register( $hiddenExecController = new self( function( Request $req, Response $res ) {
@@ -154,7 +154,7 @@ if( !class_exists( "Controller" ) ) {
 			if( $mode & self::CTRL_NOT_FOUND )
 				self::register( $defaultController = new self( function( Request $req, Response $res ) {
 					return new HttpCode( 404, $req->file );
-				}, true ) );
+				}, 1 ) );
 		}
 
 		static function autoCatch() {
@@ -180,4 +180,3 @@ if( !class_exists( "Controller" ) ) {
 	require_once "HttpCode.class.php";
 	require_once "File.class.php";
 }
-

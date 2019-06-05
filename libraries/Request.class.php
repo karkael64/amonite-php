@@ -53,12 +53,6 @@ if( !class_exists( "Request" ) ) {
 					"ADDRESS" => isset( $_SERVER[ "REMOTE_ADDR" ] ) ? $_SERVER[ "REMOTE_ADDR" ] : NULL,
 					"PORT" => isset( $_SERVER[ "REMOTE_PORT" ] ) ? +$_SERVER[ "REMOTE_PORT" ] : NULL,
 					"MIME" => isset( $_SERVER[ "HTTP_ACCEPT" ] ) ? $_SERVER[ "HTTP_ACCEPT" ] : NULL
-				),
-				"DENY" => array(
-					"JS" => false,
-					"CACHE" => false,
-					"COOKIE" => false,
-					"GEO" => false
 				)
 			);
 
@@ -86,22 +80,6 @@ if( !class_exists( "Request" ) ) {
 
 		static function getArray() {
 			return self::i()->toArray();
-		}
-
-		static function denyJS() {
-			return self::i()->DENY->JS;
-		}
-
-		static function denyCookie() {
-			return self::i()->DENY->COOKIE;
-		}
-
-		static function denyCache() {
-			return self::i()->DENY->CACHE;
-		}
-
-		static function denyGeo() {
-			return self::i()->DENY->GEO;
 		}
 
 		static function getMimeTypes() {
@@ -168,4 +146,3 @@ if( !class_exists( "Request" ) ) {
 		}
 	}
 }
-
