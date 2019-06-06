@@ -1,0 +1,24 @@
+{
+    "name": "amonite/amonite",
+    "type": "library",
+    "description": "PHP framework with endpoints",
+    "keywords": [
+      "motor",
+      "framework",
+      "endpoint",
+      "lightweight"
+    ],
+    "homepage": "https://github.com/karkael64/amonite-php",
+    "license": "Apache License",
+    "authors": [
+        {
+            "name": "Karkael Haunter",
+            "email": "karkael@gmail.com",
+            "homepage": "https://github.com/karkael64",
+            "role": "Creator, developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2"
+    }
+}
