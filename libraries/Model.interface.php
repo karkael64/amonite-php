@@ -1,5 +1,7 @@
 <?php
 
+namespace Amonite;
+
 if( !interface_exists( "Model" ) ) {
 
 	interface Model {
@@ -12,4 +14,3 @@ if( !interface_exists( "Model" ) ) {
 		static public function remove( array $where, $limit = 0, $start_at = 0 );
 	}
 }
-

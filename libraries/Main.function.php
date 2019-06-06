@@ -1,5 +1,7 @@
 <?php
 
+namespace Amonite;
+
 // STRINGIFY
 
 if( !function_exists( "to_string" ) ) {
@@ -9,7 +11,7 @@ if( !function_exists( "to_string" ) ) {
 	 * @param string|bool|int|double|float|array|callable|object|null $el is the parameter to stringify.
 	 * @return string is the translate of bool, null, array to JSON, recursive call function until it does not return a
 	 *              function, call object __toString function or set it between chevrons.
-	 * @throws Exception if parameter is not a string, bool, int, double, float, array, callable, object or null.
+	 * @throws \Exception if parameter is not a string, bool, int, double, float, array, callable, object or null.
 	 */
 
 	function to_string( $el ) {
@@ -27,7 +29,7 @@ if( !function_exists( "to_string" ) ) {
 		elseif( is_object( $el ) ) {
 			return "<Object:" . get_class( $el ) . ">";
 		} else
-			throw new Exception( "Parameter is not a String, a Boolean, a Number, an Array, a Function, an Object nor null." );
+			throw new \Exception( "Parameter is not a String, a Boolean, a Number, an Array, a Function, an Object nor null." );
 	}
 }
 
@@ -39,7 +41,7 @@ if( !function_exists( "to_string_exec" ) ) {
 	 * @param string|bool|int|double|float|array|callable|object|null $el is the parameter to stringify.
 	 * @return string is the translate of bool, null, array to JSON, recursive call function until it does not return a
 	 *              function, call object __toString function or set it between chevrons.
-	 * @throws Exception if parameter is not a string, bool, int, double, float, array, callable, object or null.
+	 * @throws \Exception if parameter is not a string, bool, int, double, float, array, callable, object or null.
 	 */
 
 	function to_string_exec( $el ) {
@@ -63,7 +65,7 @@ if( !function_exists( "to_string_exec" ) ) {
 				return "<Object:" . get_class( $el ) . ">";
 			}
 		} else
-			throw new Exception( "Parameter is not a String, a Boolean, a Number, an Array, a Function, an Object nor null." );
+			throw new \Exception( "Parameter is not a String, a Boolean, a Number, an Array, a Function, an Object nor null." );
 	}
 }
 
@@ -91,7 +93,7 @@ if( !function_exists( "ms_to_json" ) ) {
 	 */
 
 	function ms_to_json( $int ) {
-		$dt = new DateTime();
+		$dt = new \DateTime();
 		$dt->setTimestamp( $int / 1000 );
 		$m = "" . round( $dt->format( 'u' ) );
 		while( strlen( $m ) < 3 ) $m = '0' . $m;
@@ -108,7 +110,7 @@ if( !function_exists( "ms_to_date" ) ) {
 	 */
 
 	function ms_to_date( $int ) {
-		$dt = new DateTime();
+		$dt = new \DateTime();
 		$dt->setTimestamp( $int / 1000 );
 		return $dt->format( 'd' ) . ' ' . month_to_fr( $dt->format( 'm' ) ) . ' ' . $dt->format( 'Y' );
 	}
@@ -134,7 +136,7 @@ if( !function_exists( "ms_to_minute" ) ) {
 	 */
 
 	function ms_to_minute( $int ) {
-		$dt = new DateTime();
+		$dt = new \DateTime();
 		$dt->setTimestamp( $int / 1000 );
 		return $dt->format( 'H:i' );
 	}
@@ -149,7 +151,7 @@ if( !function_exists( "ms_to_second" ) ) {
 	 */
 
 	function ms_to_second( $int ) {
-		$dt = new DateTime();
+		$dt = new \DateTime();
 		$dt->setTimestamp( $int / 1000 );
 		return $dt->format( 'H:i\'s' );
 	}
@@ -164,7 +166,7 @@ if( !function_exists( "ms_to_millisecond" ) ) {
 	 */
 
 	function ms_to_millisecond( $int ) {
-		$dt = new DateTime();
+		$dt = new \DateTime();
 		$dt->setTimestamp( $int / 1000 );
 		$m = "" . round( $dt->format( 'u' ) );
 		while( strlen( $m ) < 3 ) $m = '0' . $m;
@@ -267,7 +269,7 @@ if( !function_exists( "file_basename" ) ) {
 	 * @param string|object $el is any string, but advisable not a path with '/'
 	 * @param null|string $ignore is any string, to remove in the end of the string
 	 * @return string with only figure and lowercase and '-' characters
-	 * @throws Exception if $el is not a string nor an object
+	 * @throws \Exception if $el is not a string nor an object
 	 */
 
 	function file_basename( $el, $ignore = null ) {
@@ -277,7 +279,7 @@ if( !function_exists( "file_basename" ) ) {
 		elseif( is_string( $el ) )
 			$name = $el;
 		else
-			throw new Exception( "Parameter is not an Object nor a String." );
+			throw new \Exception( "Parameter is not an Object nor a String." );
 
 
 		$i = 0;
@@ -405,18 +407,18 @@ if( !function_exists( "exception_to_string" ) ) {
 
 	/**
 	 * @function exception_to_string pretty print an exception for a "text/plain" document
-	 * @param Throwable $e
+	 * @param \Throwable $e
 	 * @return string
 	 */
 
 	function exception_to_string( $e ) {
 
-		if( class_exists( "FatalException" ) and $e instanceof FatalException ) {
+		if( class_exists( "Amonite\\\FatalException" ) and $e instanceof \FatalException ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : ";
 			return $title . "\n\n" . $e->getMessage() . "\n\n";
 		}
-		elseif( $e instanceof Throwable or $e instanceof Exception ) {
+		elseif( $e instanceof \Throwable or $e instanceof \Exception ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : " . json_encode( $e->getMessage() );
 
@@ -442,18 +444,18 @@ if( !function_exists( "exception_to_html" ) ) {
 
 	/**
 	 * @function exception_to_html pretty print an exception for a "text/html" document
-	 * @param Throwable $e
+	 * @param \Throwable $e
 	 * @return string
 	 */
 
 	function exception_to_html( $e ) {
 
-		if( class_exists( "FatalException" ) and $e instanceof FatalException ) {
+		if( class_exists( "Amonite\\\FatalException" ) and $e instanceof \FatalException ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : ";
 			return "<div><pre>" . htmlentities( $title ) . "</pre><pre>" . htmlentities( $e->getMessage() ) . "</pre></div>";
 		}
-		elseif( $e instanceof Throwable or $e instanceof Exception ) {
+		elseif( $e instanceof \Throwable or $e instanceof \Exception ) {
 
 			$title = get_class( $e ) . " " . $e->getCode() . " catched in " . $e->getFile() . "(" . $e->getLine() . ") : " . json_encode( $e->getMessage() );
 
@@ -479,12 +481,12 @@ if( !function_exists( "throwable_to_array" ) ) {
 
 	/**
 	 * @function throwable_to_array returns an exception to an array well formatted.
-	 * @param Throwable $e
+	 * @param \Throwable $e
 	 * @return array
 	 */
 	function throwable_to_array( $e ) {
 
-		if( $e instanceof Throwable or $e instanceof Exception ) {
+		if( $e instanceof \Throwable or $e instanceof \Exception ) {
 			$trace = $e->getTrace();
 			$trace[ "code" ] = $e->getCode();
 			$trace[ "message" ] = $e->getMessage();
@@ -500,14 +502,14 @@ if( !function_exists( "throwable_to_json" ) ) {
 
 	/**
 	 * @function throwable_to_json pretty print an exception for a "application/json" document
-	 * @param Throwable $e
+	 * @param \Throwable $e
 	 * @param int|null $options
 	 * @return string
 	 */
 
 	function throwable_to_json( $e, $options = null ) {
 
-		if( $e instanceof Throwable or $e instanceof Exception )
+		if( $e instanceof \Throwable or $e instanceof \Exception )
 			return json_encode( throwable_to_array( $e ), $options );
 		else
 			return "";
@@ -519,14 +521,14 @@ if( !function_exists( "throwable_to_mime" ) ) {
 
 	/**
 	 * @function throwable_to_mime pretty print an exception for a document with mime $mime
-	 * @param Throwable $e
+	 * @param \Throwable $e
 	 * @param string $mime
 	 * @return string
 	 */
 
 	function throwable_to_mime( $e, $mime ) {
 
-		if( $e instanceof Throwable or $e instanceof Exception ) {
+		if( $e instanceof \Throwable or $e instanceof \Exception ) {
 			if( $mime === "application/json" ) {
 				return throwable_to_json( $e );
 			} elseif( $mime === "text/html" ) {
@@ -540,4 +542,3 @@ if( !function_exists( "throwable_to_mime" ) ) {
 		}
 	}
 }
-

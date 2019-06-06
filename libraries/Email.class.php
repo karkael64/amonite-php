@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Email" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Email" ) ) {
 
     class Email {
 

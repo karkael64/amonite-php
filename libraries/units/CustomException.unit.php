@@ -2,40 +2,39 @@
 
 require_once ROOT . "/libraries/Unit.class.php";
 
-return new Unit( "CustomException", function( Unit $unit ){
+return new Amonite\Unit( "Exception", function( Amonite\Unit $unit ){
 
 	require_once ROOT . "/libraries/CustomException.class.php";
 
-	$unit->section( "Classes are set", function( Unit $unit ){
+	$unit->section( "Classes are set", function( Amonite\Unit $unit ){
 
 		$unit
-			->expectClassExists( "CustomException", "CustomException class exists." )
-			->expectClassExists( "ErrorException", "ErrorException class exists." )
-			->expectClassExists( "WarningException", "WarningException class exists." )
-			->expectClassExists( "ParseException", "ParseException class exists." )
-			->expectClassExists( "NoticeException", "NoticeException class exists." )
-			->expectClassExists( "CoreErrorException", "CoreErrorException class exists." )
-			->expectClassExists( "CoreWarningException", "CoreWarningException class exists." )
-			->expectClassExists( "CompileErrorException", "CompileErrorException class exists." )
-			->expectClassExists( "CompileWarningException", "CompileWarningException class exists." )
-			->expectClassExists( "UserErrorException", "UserErrorException class exists." )
-			->expectClassExists( "UserWarningException", "UserWarningException class exists." )
-			->expectClassExists( "UserNoticeException", "UserNoticeException class exists." )
-			->expectClassExists( "StrictException", "StrictException class exists." )
-			->expectClassExists( "RecoverableErrorException", "RecoverableErrorException class exists." )
-			->expectClassExists( "DeprecatedException", "DeprecatedException class exists." )
-			->expectClassExists( "UserDeprecatedException", "UserDeprecatedException class exists." )
-			->expectClassExists( "FatalException", "FatalException class exists." )
-			->expectClassExists( "TypeException", "TypeException class exists." )
+			->expectClassExists( "Amonite\\CustomException", "Amonite\\CustomException class exists." )
+			->expectClassExists( "Amonite\\ErrorException", "Amonite\\ErrorException class exists." )
+			->expectClassExists( "Amonite\\WarningException", "Amonite\\WarningException class exists." )
+			->expectClassExists( "Amonite\\ParseException", "Amonite\\ParseException class exists." )
+			->expectClassExists( "Amonite\\NoticeException", "Amonite\\NoticeException class exists." )
+			->expectClassExists( "Amonite\\CoreErrorException", "Amonite\\CoreErrorException class exists." )
+			->expectClassExists( "Amonite\\CoreWarningException", "Amonite\\CoreWarningException class exists." )
+			->expectClassExists( "Amonite\\CompileErrorException", "Amonite\\CompileErrorException class exists." )
+			->expectClassExists( "Amonite\\CompileWarningException", "Amonite\\CompileWarningException class exists." )
+			->expectClassExists( "Amonite\\UserErrorException", "Amonite\\UserErrorException class exists." )
+			->expectClassExists( "Amonite\\UserWarningException", "Amonite\\UserWarningException class exists." )
+			->expectClassExists( "Amonite\\UserNoticeException", "Amonite\\UserNoticeException class exists." )
+			->expectClassExists( "Amonite\\StrictException", "Amonite\\StrictException class exists." )
+			->expectClassExists( "Amonite\\RecoverableErrorException", "Amonite\\RecoverableErrorException class exists." )
+			->expectClassExists( "Amonite\\DeprecatedException", "Amonite\\DeprecatedException class exists." )
+			->expectClassExists( "Amonite\\UserDeprecatedException", "Amonite\\UserDeprecatedException class exists." )
+			->expectClassExists( "Amonite\\FatalException", "Amonite\\FatalException class exists." )
+			->expectClassExists( "Amonite\\TypeException", "Amonite\\TypeException class exists." )
 		;
 	});
 
-	$unit->section( "Test", function( Unit $unit ){
+	$unit->section( "Test", function( Amonite\Unit $unit ){
 
 		$unit
-			->assert( CustomException::isset_error_handler(), "CustomException error handler should be already set." )
-			->assert( CustomException::isset_fatal_handler(), "CustomException fatal handler should be already set." )
+			->assert( Amonite\CustomException::isset_error_handler(), "Exception error handler should be already set." )
+			->assert( Amonite\CustomException::isset_fatal_handler(), "Exception fatal handler should be already set." )
 		;
 	});
 });
-

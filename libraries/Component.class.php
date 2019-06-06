@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Component" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Component" ) ) {
 
 	require_once "Content.class.php";
 
@@ -70,4 +72,3 @@ if( !class_exists( "Component" ) ) {
 	require_once "Response.class.php";
 	require_once "Observer.class.php";
 }
-

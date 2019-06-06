@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Request" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Request" ) ) {
 
 	require_once "Constants.class.php";
 

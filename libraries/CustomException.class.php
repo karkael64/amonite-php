@@ -1,14 +1,16 @@
 <?php
 
-if( !class_exists( "CustomException" ) ) {
+namespace Amonite;
 
-	abstract class CustomException extends Exception {
+if( !class_exists( "Amonite\\CustomException" ) ) {
+
+	abstract class CustomException extends \Exception {
 
 		public function __construct( $message = "", $code = 0, $previous = null, $filename = null, $line = null ) {
 
 			if( !is_null( $filename ) ) $this->file = $filename;
 			if( !is_null( $line ) ) $this->line = $line;
-			if( !( $previous instanceof Throwable ) and !( $previous instanceof Exception ) )
+			if( !( $previous instanceof \Throwable ) and !( $previous instanceof \Exception ) )
 				$previous = null;
 
 			parent::__construct( $message, $code, $previous );
@@ -69,7 +71,7 @@ if( !class_exists( "CustomException" ) ) {
 		static function set_error_handler( $error_types = E_ALL ) {
 			if( !self::isset_error_handler() ) {
 				self::$is_set_error = true;
-				return set_error_handler( array( "CustomException", "error_handler" ), $error_types );
+				return set_error_handler( array( "Exception", "error_handler" ), $error_types );
 			}
 			return false;
 		}
@@ -100,7 +102,7 @@ if( !class_exists( "CustomException" ) ) {
 			if( !self::$is_set_fatal ) {
 				self::$is_set_fatal = true;
 				ini_set( "display_errors", 0 );
-				register_shutdown_function( array( "CustomException", "fatal_error_handler" ) );
+				register_shutdown_function( array( "Exception", "fatal_error_handler" ) );
 			}
 		}
 
@@ -109,72 +111,72 @@ if( !class_exists( "CustomException" ) ) {
 		}
 	}
 
-	if( !class_exists( "ErrorException" ) ) {
+	if( !class_exists( "Amonite\\ErrorException" ) ) {
 		class ErrorException extends CustomException {
 		}
 	}
-	if( !class_exists( "WarningException" ) ) {
+	if( !class_exists( "Amonite\\WarningException" ) ) {
 		class WarningException extends CustomException {
 		}
 	}
-	if( !class_exists( "ParseException" ) ) {
+	if( !class_exists( "Amonite\\ParseException" ) ) {
 		class ParseException extends CustomException {
 		}
 	}
-	if( !class_exists( "NoticeException" ) ) {
+	if( !class_exists( "Amonite\\NoticeException" ) ) {
 		class NoticeException extends CustomException {
 		}
 	}
-	if( !class_exists( "CoreErrorException" ) ) {
+	if( !class_exists( "Amonite\\CoreErrorException" ) ) {
 		class CoreErrorException extends CustomException {
 		}
 	}
-	if( !class_exists( "CoreWarningException" ) ) {
+	if( !class_exists( "Amonite\\CoreWarningException" ) ) {
 		class CoreWarningException extends CustomException {
 		}
 	}
-	if( !class_exists( "CompileErrorException" ) ) {
+	if( !class_exists( "Amonite\\CompileErrorException" ) ) {
 		class CompileErrorException extends CustomException {
 		}
 	}
-	if( !class_exists( "CompileWarningException" ) ) {
+	if( !class_exists( "Amonite\\CompileWarningException" ) ) {
 		class CompileWarningException extends CustomException {
 		}
 	}
-	if( !class_exists( "UserErrorException" ) ) {
+	if( !class_exists( "Amonite\\UserErrorException" ) ) {
 		class UserErrorException extends CustomException {
 		}
 	}
-	if( !class_exists( "UserWarningException" ) ) {
+	if( !class_exists( "Amonite\\UserWarningException" ) ) {
 		class UserWarningException extends CustomException {
 		}
 	}
-	if( !class_exists( "UserNoticeException" ) ) {
+	if( !class_exists( "Amonite\\UserNoticeException" ) ) {
 		class UserNoticeException extends CustomException {
 		}
 	}
-	if( !class_exists( "StrictException" ) ) {
+	if( !class_exists( "Amonite\\StrictException" ) ) {
 		class StrictException extends CustomException {
 		}
 	}
-	if( !class_exists( "RecoverableErrorException" ) ) {
+	if( !class_exists( "Amonite\\RecoverableErrorException" ) ) {
 		class RecoverableErrorException extends CustomException {
 		}
 	}
-	if( !class_exists( "DeprecatedException" ) ) {
+	if( !class_exists( "Amonite\\DeprecatedException" ) ) {
 		class DeprecatedException extends CustomException {
 		}
 	}
-	if( !class_exists( "UserDeprecatedException" ) ) {
+	if( !class_exists( "Amonite\\UserDeprecatedException" ) ) {
 		class UserDeprecatedException extends CustomException {
 		}
 	}
 
-	if( !class_exists( "FatalException" ) ) {
+	if( !class_exists( "Amonite\\FatalException" ) ) {
 		class FatalException extends CustomException {
 		}
 	}
-	if( !class_exists( "TypeException" ) ) {
+	if( !class_exists( "Amonite\\TypeException" ) ) {
 		class TypeException extends CustomException {
 		}
 	}
@@ -182,4 +184,3 @@ if( !class_exists( "CustomException" ) ) {
 	require_once "HttpCode.class.php";
 	require_once "Response.class.php";
 }
-

@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "ModelPDO" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\ModelPDO" ) ) {
 
 	class ModelPDO implements Model {
 
@@ -277,4 +279,3 @@ if( !class_exists( "ModelPDO" ) ) {
 		}
 	}
 }
-

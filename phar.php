@@ -45,7 +45,7 @@ foreach( $files as $file ) {
 	$p->addFile( $file, basename( $file ) );
 }
 
-$p->setStub( '<?php 
+$p->setStub( '<?php
 
 /** @SECURITY Anti-DDOS system */
 time_nanosleep( 0 , 1 );
@@ -54,8 +54,8 @@ $pharname = basename( __FILE__ );
 
 /** @SECURITY Catch errors */
 require_once "phar://$pharname/CustomException.class.php";
-CustomException::set_error_handler();
-CustomException::set_fatal_handler();
+Amonite\CustomException::set_error_handler();
+Amonite\CustomException::set_fatal_handler();
 
 /** @APPLICATION Function, Content, Database */
 require_once "phar://$pharname/Main.function.php";
@@ -68,13 +68,13 @@ require_once "phar://$pharname/Component.class.php";
 require_once "phar://$pharname/Document.class.php";
 require_once "phar://$pharname/DownloadFile.class.php";
 
+
 /** If you need... */
 require_once "phar://$pharname/Backup.class.php";
 require_once "phar://$pharname/Email.class.php";
 
-__HALT_COMPILER(); 
+__HALT_COMPILER();
 ?>' );
 
 echo "Phar build !\n\r";
 echo "Version: " . round( microtime( true ) * 1000 ) . "\n\r";
-

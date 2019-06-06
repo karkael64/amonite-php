@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Observer" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Observer" ) ) {
 
 	abstract class Observer {
 
@@ -30,4 +32,3 @@ if( !class_exists( "Observer" ) ) {
 	ob_start( null, 0, PHP_OUTPUT_HANDLER_CLEANABLE | PHP_OUTPUT_HANDLER_REMOVABLE );
 	Observer::start_chunk();
 }
-

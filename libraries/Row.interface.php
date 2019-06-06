@@ -1,5 +1,7 @@
 <?php
 
+namespace Amonite;
+
 if( !interface_exists( "Row" ) ) {
 
 	interface Row {
@@ -50,4 +52,3 @@ if( !interface_exists( "Row" ) ) {
 		function __call( $name, $arguments );
 	}
 }
-

@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "RowPDO" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\RowPDO" ) ) {
 
 	require_once "ModelPDO.class.php";
 	require_once "Row.interface.php";
@@ -98,7 +100,7 @@ if( !class_exists( "RowPDO" ) ) {
 			elseif( strpos( $name, "add" ) === 0 )
 				return $this->_add( substr( $name, 3 ), $args, !!$p );
 			else {
-				throw new Exception( "Function not defined" );
+				throw new CustomException( "Function not defined" );
 			}
 		}
 
@@ -135,7 +137,7 @@ if( !class_exists( "RowPDO" ) ) {
 					return $data;
 			}
 			else {
-				throw new Exception( "Class $name not found." );
+				throw new CustomException( "Class $name not found." );
 			}
 		}
 
@@ -172,7 +174,7 @@ if( !class_exists( "RowPDO" ) ) {
 					return $data;
 			}
 			else {
-				throw new Exception( "Class $name not found." );
+				throw new CustomException( "Class $name not found." );
 			}
 		}
 
@@ -205,7 +207,7 @@ if( !class_exists( "RowPDO" ) ) {
 				}
 			}
 			else {
-				throw new Exception( "Class $name not found." );
+				throw new CustomException( "Class $name not found." );
 			}
 			return null;
 		}

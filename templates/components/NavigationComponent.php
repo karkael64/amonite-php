@@ -4,9 +4,9 @@ if( !class_exists( "NavigationComponent" ) ) {
 
 	require_once ROOT . "/datas/models/NavModel.php";
 
-	class NavigationComponent extends Component {
+	class NavigationComponent extends Amonite\Component {
 
-		function onCall( Request $req, Response $res ) {
+		function onCall( Amonite\Request $req, Amonite\Response $res ) {
 
 			$n = new NavModel();
 			if( !$n->count() ) {
@@ -15,15 +15,15 @@ if( !class_exists( "NavigationComponent" ) ) {
 				$n->insert( array( "url" => "#c", "name" => "C" ) );
 			}
 
-            $h = new HttpCode( 200, array( "success" => true, "count" => $n->count() ) );
+      $h = new Amonite\HttpCode( 200, array( "success" => true, "count" => $n->count() ) );
 			$h->setMime( "application/json" );
-            return $h; //throw $h;
+      return $h; //throw $h;
 		}
 
-		function getComponent( Request $req, Response $res ) {
+		function getComponent( Amonite\Request $req, Amonite\Response $res ) {
 
 			$n = new NavModel();
-            $rows = $n->select();
+      $rows = $n->select();
 
 			?>
 
@@ -37,4 +37,3 @@ if( !class_exists( "NavigationComponent" ) ) {
 		}
 	}
 }
-

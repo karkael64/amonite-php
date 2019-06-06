@@ -1,14 +1,16 @@
 <?php
 
-if( !class_exists( "HttpCode" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\HttpCode" ) ) {
 
 	require_once "Answerable.interface.php";
 
-	class HttpCode extends Exception implements Answerable {
+	class HttpCode extends \Exception implements Answerable {
 
 		function __construct( $code = 0, $message = "", $previous = null ) {
 
-			if( !( $previous instanceof Throwable ) and !( $previous instanceof Exception ) )
+			if( !( $previous instanceof \Throwable ) and !( $previous instanceof \Exception ) )
 				$previous = null;
 
 			parent::__construct( to_string( $message ), $code, $previous );
@@ -229,14 +231,14 @@ if( !class_exists( "HttpCode" ) ) {
 			if( $el instanceof self )
 				return $el;
 
-			if( $el instanceof Throwable or $el instanceof Exception )
+			if( $el instanceof \Throwable or $el instanceof \Exception )
 				return new HttpCode( 500, "Throwable catched.", $el );
 
 			try {
 
 				while( !is_string( $el ) ) {
 
-					if( $el instanceof Closure ) {
+					if( $el instanceof \Closure ) {
 						$el = call_user_func_array( $el, array( Request::getInstance(), Response::getInstance() ) );
 						continue;
 					}
@@ -262,11 +264,11 @@ if( !class_exists( "HttpCode" ) ) {
 				ob_get_clean();
 				return $el;
 			}
-			catch( Throwable $el ) {
+			catch( \Throwable $el ) {
 				ob_get_clean();
 				return new HttpCode( 500, "Throwable catched.", $el );
 			}
-			catch( Exception $el ) {
+			catch( \Exception $el ) {
 				ob_get_clean();
 				return new HttpCode( 500, "Throwable catched.", $el );
 			}
@@ -279,4 +281,3 @@ if( !class_exists( "HttpCode" ) ) {
 
 	require_once "Content.class.php";
 }
-

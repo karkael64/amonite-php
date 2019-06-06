@@ -2,6 +2,5 @@
 
 if( !class_exists( "NavModel" ) ) {
 
-    class NavModel extends ModelBSON {}
+    class NavModel extends Amonite\ModelBSON {}
 }
-

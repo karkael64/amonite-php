@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "DownloadFile" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\DownloadFile" ) ) {
 
 	require_once "File.class.php";
 
@@ -13,4 +15,3 @@ if( !class_exists( "DownloadFile" ) ) {
 		}
 	}
 }
-

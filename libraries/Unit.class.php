@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Unit" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Unit" ) ) {
 
 	class Unit {
 
@@ -30,7 +32,7 @@ if( !class_exists( "Unit" ) ) {
 		 * @param $name
          * @param $fn
 		 * @return Unit
-		 * @throws Exception
+		 * @throws CustomException
 		 */
 		function section( $name, $fn = null ) {
 
@@ -47,7 +49,7 @@ if( !class_exists( "Unit" ) ) {
 
 			} else {
 
-				throw new Exception( "Section parameter is not a String nor a Section instance." );
+				throw new CustomException( "Section parameter is not a String nor a Section instance." );
 			}
 		}
 
@@ -225,7 +227,7 @@ if( !class_exists( "Unit" ) ) {
 					return $this->customExpect( $title, $test, $res, $toBe, to_string( $description ), array( $class, to_string( $test ) ) );
 				} catch( Throwable $ex ) {
 					$c = get_class( $ex );
-					return $this->makeLine( $title, false, "Throws an Exception $c !", to_string( $description ), array( $class, "error" ) );
+					return $this->makeLine( $title, false, "Throws an CustomException $c !", to_string( $description ), array( $class, "error" ) );
 				}
 			}
 		}
@@ -254,7 +256,7 @@ if( !class_exists( "Unit" ) ) {
 					return $this->customExpect( $title, $test, $res, $toBe, to_string( $description ), array( $class, to_string( $test ) ) );
 				} catch( Throwable $ex ) {
 					$c = get_class( $ex );
-					return $this->makeLine( $title, false, "Throws an Exception $c !", to_string( $description ), array( $class, "error" ) );
+					return $this->makeLine( $title, false, "Throws an CustomException $c !", to_string( $description ), array( $class, "error" ) );
 				}
 			}
 		}
@@ -283,7 +285,7 @@ if( !class_exists( "Unit" ) ) {
 					return $this->customExpect( $title, $test, $res, $toBe, to_string( $description ), array( $title, to_string( $test ) ) );
 				} catch( Throwable $ex ) {
 					$c = get_class( $ex );
-					return $this->makeLine( $title, false, "Throws an Exception $c !", to_string( $description ), array( $title, "error" ) );
+					return $this->makeLine( $title, false, "Throws an CustomException $c !", to_string( $description ), array( $title, "error" ) );
 				}
 			}
 		}
@@ -311,7 +313,7 @@ if( !class_exists( "Unit" ) ) {
 			} else {
 				try {
 					call_user_func_array( $function, $args );
-					return $this->makeLine( $title, false, "Hasn't thrown an Exception !", to_string( $description ), array( $class, to_string( false ) ) );
+					return $this->makeLine( $title, false, "Hasn't thrown an CustomException !", to_string( $description ), array( $class, to_string( false ) ) );
 				} catch( Throwable $ex ) {
 					$test = ( $ex instanceof $instance );
 					return $this->customExpect( $title, $test, $ex, $instance, to_string( $description ), array( $class, to_string( $test ) ) );
@@ -341,7 +343,7 @@ if( !class_exists( "Unit" ) ) {
 					$test = true;
 					return $this->customExpect( $title, $test, "No throw", true, to_string( $description ), array( $class, to_string( $test ) ) );
 				} catch( Throwable $ex ) {
-					return $this->makeLine( $title, false, "Has thrown an Exception !", $ex->getMessage(), array( $class, to_string( false ) ) );
+					return $this->makeLine( $title, false, "Has thrown an CustomException !", $ex->getMessage(), array( $class, to_string( false ) ) );
 				}
 			}
 		}
@@ -428,7 +430,7 @@ if( !class_exists( "Unit" ) ) {
 			if( is_null( $previousTimestamp ) ) {
 				$previousTimestamp = $this->previousTimestamp;
 			} elseif( !is_numeric( $previousTimestamp ) ) {
-				throw new Exception( "Parameter is not a number." );
+				throw new CustomException( "Parameter is not a number." );
 			}
 
 			$diff = $currentTimestamp - $previousTimestamp;
@@ -458,7 +460,7 @@ if( !class_exists( "Unit" ) ) {
             elseif( is_array( $classes ) )
 				return implode( " ", $classes );
 			else
-				throw new Exception( "Classes are not a String, Null nor an Array" );
+				throw new CustomException( "Classes are not a String, Null nor an Array" );
 		}
 
 		private function string_force_length( $string, $length, $char = "0" ) {
@@ -495,9 +497,9 @@ if( !class_exists( "Unit" ) ) {
 				$str = "\n";
 				$str .= $tab . "$name, $countErrors/$count errors\n\n";
 				foreach( $lines as $line ) {
-					$str .= $tab
-						. $this->string_force_length( $line[ "time" ], 14, "0" ) . "ms "
-						. $this->string_force_length( $line[ "caller" ], 20, " " ) . ": "
+					$str .= $tab . "("
+						. $this->string_force_length( $line[ "time" ], 14, "0" ) . "ms) "
+						. $this->string_force_length( $line[ "caller" ], 30, " " ) . ": "
 						. $this->string_hellip( $line[ "print" ], 66, 6 ) . "; "
 						. $this->string_hellip( $line[ "description" ], 66, 6 ) . "\n";
 				}

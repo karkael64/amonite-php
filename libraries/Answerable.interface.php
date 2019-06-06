@@ -1,5 +1,7 @@
 <?php
 
+namespace Amonite;
+
 interface Answerable {
 
 	// HEADER
@@ -16,4 +18,3 @@ interface Answerable {
 	public function getContent();
 	public function __toString();
 }
-

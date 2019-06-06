@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Backup" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Backup" ) ) {
 
 	class Backup {
 

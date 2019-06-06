@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Content" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Content" ) ) {
 
 	require_once "Answerable.interface.php";
 
@@ -139,7 +141,7 @@ if( !class_exists( "Content" ) ) {
 				return $this->getContent();
 			} catch( Throwable $e ) {
 				return throwable_to_mime( $e, $this->mime );
-			} catch( Exception $e ) {
+			} catch( CustomException $e ) {
 				return throwable_to_mime( $e, $this->mime );
 			}
 		}
@@ -148,4 +150,3 @@ if( !class_exists( "Content" ) ) {
 	require_once "Request.class.php";
 	require_once "Response.class.php";
 }
-

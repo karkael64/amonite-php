@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Controller" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Controller" ) ) {
 
 	class Controller {
 
@@ -162,8 +164,8 @@ if( !class_exists( "Controller" ) ) {
 			try {
 				$answer = Controller::main( array( Request::getInstance(), Response::getInstance() ) );
 			}
-			catch( Throwable $answer ) {}
-			catch( Exception $answer ) {}
+			catch( \Throwable $answer ) {}
+			catch( CustomException $answer ) {}
 
 			return $answer;
 		}

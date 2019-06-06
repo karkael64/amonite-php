@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "File" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\File" ) ) {
 
 	require_once "Content.class.php";
 
@@ -83,11 +85,10 @@ if( !class_exists( "File" ) ) {
 				ob_clean();
 				throw $t;
 
-			} catch( Exception $e ) {
+			} catch( CustomException $e ) {
 				ob_clean();
 				throw $e;
 			}
 		}
 	}
 }
-

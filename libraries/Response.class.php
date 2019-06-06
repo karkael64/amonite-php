@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Response" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Response" ) ) {
 
 	class Response {
 
@@ -129,9 +131,9 @@ if( !class_exists( "Response" ) ) {
 		}
 	}
 
+
 	require_once "Request.class.php";
 	require_once "HttpCode.class.php";
 	require_once "Answerable.interface.php";
 	require_once "Main.function.php";
 }
-

@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "ModelBSON" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\ModelBSON" ) ) {
 
 	require_once "Model.interface.php";
 
@@ -116,7 +118,7 @@ if( !class_exists( "ModelBSON" ) ) {
 						return $value;
 					}
 				} else {
-					throw new Exception( "Already reading in file " . self::getName() . "." );
+					throw new CustomException( "Already reading in file " . self::getName() . "." );
 				}
 			}
 
@@ -199,7 +201,7 @@ if( !class_exists( "ModelBSON" ) ) {
 				$temp = self::getTempPath();
 				self::$handler_temp = fopen( $temp, 'w' );
 			} else {
-				throw new Exception( -1, "Already writing in file " . self::getName() . "." );
+				throw new CustomException( -1, "Already writing in file " . self::getName() . "." );
 			}
 		}
 
@@ -247,7 +249,7 @@ if( !class_exists( "ModelBSON" ) ) {
 				self::$handler = fopen( $file, 'r' );
 				self::$last_file = $file;
 			} else {
-				throw new Exception( "Can't read " . self::getName()
+				throw new CustomException( "Can't read " . self::getName()
 					. ", already reading in file " . self::$last_file
 					. ", counter " . self::$last_counter
 					. ", method " . self::$last_method
@@ -451,4 +453,3 @@ if( !class_exists( "ModelBSON" ) ) {
 		}
 	}
 }
-

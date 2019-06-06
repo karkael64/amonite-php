@@ -1,17 +1,18 @@
 <?php
 
+
 if( !class_exists( "IndexDocument" ) ) {
 
-    require_once ROOT . "/templates/components/NavigationComponent.php";
-    require_once ROOT . "/templates/components/UnitComponent.php";
+  require_once ROOT . "/templates/components/NavigationComponent.php";
+  require_once ROOT . "/templates/components/UnitComponent.php";
 
-    class IndexDocument extends Document {
+  class IndexDocument extends Amonite\Document {
 
-        function getDocument( Request $req, Response $res ) {
+    function getDocument( Amonite\Request $req, Amonite\Response $res ) {
 
-            //$this->setMime( "text/plain" );
+      //$this->setMime( "text/plain" );
 
-            ?><!doctype html>
+      ?><!doctype html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,7 @@ if( !class_exists( "IndexDocument" ) ) {
 <body>
     <h1>
          Hello World!
-        <small>You are in <?php echo $sub = ( $sub = Request::getSubWebsiteName() ) ? ucwords( $sub ) : "Main"; ?>&hellip;
+        <small>You are in <?php echo $sub = ( $sub = Amonite\Request::getSubWebsiteName() ) ? ucwords( $sub ) : "Main"; ?>&hellip;
         </small>
     </h1>
     <nav>
@@ -36,6 +37,6 @@ if( !class_exists( "IndexDocument" ) ) {
     </main>
 </body>
 </html><?php
-        }
     }
+  }
 }

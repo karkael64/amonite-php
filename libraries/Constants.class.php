@@ -1,6 +1,8 @@
 <?php
 
-if( !class_exists( "Constants" ) ) {
+namespace Amonite;
+
+if( !class_exists( "Amonite\\Constants" ) ) {
 
 	class Constants {
 
@@ -59,4 +61,3 @@ if( !class_exists( "Constants" ) ) {
 		}
 	}
 }
-
