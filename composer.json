@@ -9,7 +9,7 @@
       "lightweight"
     ],
     "homepage": "https://github.com/karkael64/amonite-php",
-    "license": "Apache License",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Karkael Haunter",
