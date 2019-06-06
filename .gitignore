@@ -1,3 +1,4 @@
 /.git
 /phar.php
 /composer.phar
+/composer.lock

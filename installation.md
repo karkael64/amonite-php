@@ -25,9 +25,7 @@ And call it in your `/index.php` file with:
 <?php
 
 require_once "amonite.phar";
-Amonite\Response::send(function() {
-  Amonite\Controller::auto(Amonite\Controller::ALL_CTRL);
-});
+Amonite\Response::send( Amonite\Controller::auto( Amonite\Controller::ALL_CTRL ) );
 ```
 
 ## Full configured entry point

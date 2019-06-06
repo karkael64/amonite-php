@@ -1,45 +1,14 @@
 <?php
 
-//	require_once "amonite.phar";
-
-/** @SECURITY Anti-DDOS system */
 time_nanosleep( 0 , 1 );
-defined( "ROOT" ) or define( "ROOT", realpath( __DIR__ ) );
 
-/** @SECURITY Catch errors */
-require_once ROOT . "/libraries/CustomException.class.php";
-Amonite\CustomException::set_error_handler();
-Amonite\CustomException::set_fatal_handler();
-
-/** @APPLICATION Function, Content, Database */
-require_once ROOT . "/libraries/Main.function.php";
-require_once ROOT . "/libraries/Request.class.php";
-require_once ROOT . "/libraries/Response.class.php";
-require_once ROOT . "/libraries/Controller.class.php";
-require_once ROOT . "/libraries/ModelBSON.class.php";
-require_once ROOT . "/libraries/ModelPDO.class.php";
-require_once ROOT . "/libraries/Component.class.php";
-require_once ROOT . "/libraries/Document.class.php";
-require_once ROOT . "/libraries/DownloadFile.class.php";
-Amonite\HttpCode::$DEBUG_MODE = true;
-
-
-Amonite\Response::send( function( Amonite\Request $req, Amonite\Response $res ) {
-
-	//	Amonite\HttpCode::$DEBUG_MODE = $req::isLocal();
-	$sub = $req::getSubWebsiteName( "main" );
-
-	Amonite\Controller::$theme_path = realpath( ROOT . "/themes/" . $sub );
-	Amonite\ModelBSON::$datafiles_path = realpath( ROOT . "/datas/files" );
-
-	$req->env = array(
-		"theme" => realpath( ROOT . "/themes/" . $sub ),
-		"documents" => realpath( ROOT . "/templates/documents" ),
-		"components" => realpath( ROOT . "/templates/components" ),
-		"models" => realpath( ROOT . "/datas/models" ),
-		"datas" => realpath( ROOT . "/datas/files" ),
-		"libraries" => realpath( ROOT . "/libraries" )
-	);
-
-	return Amonite\Controller::auto( Amonite\Controller::ALL_CTRL );
-} );
+require_once "libraries/CustomException.class.php";
+require_once "libraries/Main.function.php";
+require_once "libraries/Request.class.php";
+require_once "libraries/Response.class.php";
+require_once "libraries/Controller.class.php";
+require_once "libraries/ModelBSON.class.php";
+require_once "libraries/ModelPDO.class.php";
+require_once "libraries/Component.class.php";
+require_once "libraries/Document.class.php";
+require_once "libraries/DownloadFile.class.php";
