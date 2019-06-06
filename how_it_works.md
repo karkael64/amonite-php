@@ -14,11 +14,11 @@ Amonite is not a simple file reader, so if you want to execute an entry point, y
 
 1. Security: set `ROOT` and delay execution
 2. Errors: handle errors thrown
-3. With `Controller::auto( Controller::ALL_CTRL )` you do:
-  1. Return file content if file exists (if options contains `Controller::CTRL_FILE`)
-  2. Return file execution if file ends with ".php" (if options contains `Controller::CTRL_PHP` or `Controller::CTRL_HIDDEN`)
-  3. Return a HttpCode with code 404 (if options contains `Controller::CTRL_NOT_FOUND`)
-4. With `Response::send( function( Request $res, Response $res ) { return "<html>"; } );` you do:
+3. With `Amonite\Controller::auto( Amonite\Controller::ALL_CTRL )` you do:
+  1. Return file content if file exists (if options contains `Amonite\Controller::CTRL_FILE`)
+  2. Return file execution if file ends with ".php" (if options contains `Amonite\Controller::CTRL_PHP` or `Amonite\Controller::CTRL_HIDDEN`)
+  3. Return a HttpCode with code 404 (if options contains `Amonite\Controller::CTRL_NOT_FOUND`)
+4. With `Response::send( function( Amonite\Request $res, Amonite\Response $res ) { return "<html>"; } );` you do:
   1. Set the Request as a constant
   2. Get a Response instance
   3. Translate the returned or thrown String, HttpCode or Error to body string
@@ -35,15 +35,15 @@ Controller is a register composed with Controller instances. Every controllers r
 ``` PHP
 <?php
 
-$execute = function ( Request $req, Response $res ) {
+$execute = function ( Amonite\Request $req, Amonite\Response $res ) {
   return "<pre>Hello, World!</pre>";
 }
 
-$priority = function ( Request $req, Response $res ) {
+$priority = function ( Amonite\Request $req, Amonite\Response $res ) {
   return $req->file === "/hello.html" ? 10 : 0;
 }
 
-Controller::register($helloWorld = new Controller($execute, $priority));
+Amonite\Controller::register($helloWorld = new Amonite\Controller($execute, $priority));
 ```
 
 The HTTP entry points of the default controllers are in folder sets here :
@@ -52,7 +52,7 @@ The HTTP entry points of the default controllers are in folder sets here :
 ``` PHP
 <?php
 
-Controller::$theme_path = realpath( ROOT . "/themes/" );
+Amonite\Controller::$theme_path = realpath( ROOT . "/themes/" );
 ```
 
 
@@ -67,12 +67,12 @@ Easily Backup files with one of this lines:
 ``` PHP
 <?php
 
-Backup::revertDay();
-Backup::revertWeek();
-Backup::revertMonth();
-Backup::revertYear();
-Backup::revertBackup( $filepath );
-Backup::revertFileWithBackup( $dest_filepath, $backup_filepath );
+Amonite\Backup::revertDay();
+Amonite\Backup::revertWeek();
+Amonite\Backup::revertMonth();
+Amonite\Backup::revertYear();
+Amonite\Backup::revertBackup( $filepath );
+Amonite\Backup::revertFileWithBackup( $dest_filepath, $backup_filepath );
 ```
 
 The default configuration:
@@ -80,8 +80,8 @@ The default configuration:
 ``` PHP
 <?php
 
-Backup::$backup_folder = ROOT . "/databases/backup";   // backup files are saved in this directory, named with creation date.
-Backup::$files_folder = ROOT . "/databases/datafiles"; // directory's files saved in backup.
+Amonite\Backup::$backup_folder = ROOT . "/databases/backup";   // backup files are saved in this directory, named with creation date.
+Amonite\Backup::$files_folder = ROOT . "/databases/datafiles"; // directory's files saved in backup.
 ```
 
 
@@ -92,8 +92,8 @@ When an error is triggered, the PHP throw errors in HTML format and is never cat
 ``` PHP
 <?php
 
-CustomException::set_error_handler();
-CustomException::set_fatal_handler();
+Amonite\CustomException::set_error_handler();
+Amonite\CustomException::set_fatal_handler();
 ```
 
 
@@ -104,7 +104,7 @@ You can get errors more verbose by setting:
 ``` PHP
 <?php
 
-HttpCode::$DEBUG_MODE = true;
+Amonite\HttpCode::$DEBUG_MODE = true;
 ```
 
 
@@ -150,10 +150,10 @@ Email configuration helps you to identify a user to send an email in case of any
 ``` PHP
 <?php
 
-Email::$ADMIN_EMAIL =       "webmaster@your.site";
-Email::$ADMIN_EMAIL_NAME =  "Webmaster";
-Email::$ADMIN_ERROR_TITLE = "Admin Error Report";
-Email::$SITE_NAME =         "Your Site";
+Amonite\Email::$ADMIN_EMAIL =       "webmaster@your.site";
+Amonite\Email::$ADMIN_EMAIL_NAME =  "Webmaster";
+Amonite\Email::$ADMIN_ERROR_TITLE = "Admin Error Report";
+Amonite\Email::$SITE_NAME =         "Your Site";
 ```
 
 Then you just have to send an email to admin with :
@@ -161,7 +161,7 @@ Then you just have to send an email to admin with :
 ``` PHP
 <?php
 
-Email::AdminError("Your message here!");
+Amonite\Email::AdminError("Your message here!");
 ```
 
 
@@ -172,7 +172,7 @@ Every ModelBSON child classes read files in this directory :
 ``` PHP
 <?php
 
-ModelBSON::$datafiles_path = realpath( ROOT . "/datas/files" );
+Amonite\ModelBSON::$datafiles_path = realpath( ROOT . "/datas/files" );
 ```
 
 
