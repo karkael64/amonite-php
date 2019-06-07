@@ -99,8 +99,12 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 				$result = array();
 				while( !( $res = call_user_func( $value ) ) ) {
 					$res[ self::ID ] = self::nextId();
-					$handler = fopen( self::getFilePath(), 'a' );
-					fputs( $handler, json_encode( $value ) . "\n" );
+					$filename = self::getFilePath();
+					self::attemptCreateFile( $filename );
+					$handler = fopen( $filename, 'a' );
+					if (fwrite( $handler, json_encode( $value ) . "\n" ) === false) {
+						throw new ErrorException("Can't write in file: $filename");
+					}
 					fclose( $handler );
 					$result[] = $res;
 				}
@@ -111,14 +115,18 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 					if( is_array( $value ) ) {
 
 						$value[ self::ID ] = self::nextId();
-						$handler = fopen( self::getFilePath(), 'a' );
-						fputs( $handler, json_encode( $value ) . "\n" );
+						$filename = self::getFilePath();
+						self::attemptCreateFile( $filename );
+						$handler = fopen( $filename, 'a' );
+						if (fwrite( $handler, json_encode( $value ) . "\n" ) === false) {
+							throw new ErrorException("Can't write in file: $filename");
+						}
 						fclose( $handler );
 
 						return $value;
 					}
 				} else {
-					throw new CustomException( "Already reading in file " . self::getName() . "." );
+					throw new ErrorException( "Already reading in file " . self::getName() . "." );
 				}
 			}
 
@@ -199,6 +207,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 
 			if( !self::$handler_temp ) {
 				$temp = self::getTempPath();
+				self::attemptCreateFile( $temp );
 				self::$handler_temp = fopen( $temp, 'w' );
 			} else {
 				throw new CustomException( -1, "Already writing in file " . self::getName() . "." );
@@ -218,7 +227,9 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 						unset( $row[ $field ] );
 
 				$row = json_encode( $row ) . "\n";
-				fputs( self::$handler_temp, $row );
+				if( fwrite( self::$handler_temp, $row ) === false ) {
+					throw new ErrorException( "Can't write in file: " . self::$handler_temp);
+				}
 			}
 		}
 
@@ -243,9 +254,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 
 			if( !self::$handler ) {
 				$file = self::getFilePath();
-				if( !file_exists( $file ) )
-					touch( $file );
-
+				self::attemptCreateFile( $file );
 				self::$handler = fopen( $file, 'r' );
 				self::$last_file = $file;
 			} else {
@@ -254,6 +263,25 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 					. ", counter " . self::$last_counter
 					. ", method " . self::$last_method
 					. ".", -1 );
+			}
+		}
+
+		static function attemptCreateFile( $file ) {
+			if (!file_exists($file)) {
+				if (!touch($file)) {
+					$dir = dirname($file);
+					if (!is_dir($dir)) {
+						if (!mkdir($dir, 0666)) {
+							throw new ErrorException("Can't create data folder: $dir");
+						}
+					} else {
+						chmod($dir, 0666);
+					}
+					if (!touch($file)) {
+						throw new ErrorException("Data folder is not accessible: $dir (user executing needs \"rwx\" permissions)");
+					}
+				}
+				chmod($file, 0666);
 			}
 		}
 

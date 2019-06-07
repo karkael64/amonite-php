@@ -8,22 +8,21 @@ if( !class_exists( "NavigationComponent" ) ) {
 
 		function onCall( Amonite\Request $req, Amonite\Response $res ) {
 
-			$n = new NavModel();
-			if( !$n->count() ) {
-				$n->insert( array( "url" => "#a", "name" => "A" ) );
-				$n->insert( array( "url" => "#b", "name" => "B" ) );
-				$n->insert( array( "url" => "#c", "name" => "C" ) );
+			if( !NavModel::count() ) {
+				NavModel::insert( array( "url" => "#a", "name" => "A" ) );
+				NavModel::insert( array( "url" => "#b", "name" => "B" ) );
+				NavModel::insert( array( "url" => "#c", "name" => "C" ) );
 			}
 
-      $h = new Amonite\HttpCode( 200, array( "success" => true, "count" => $n->count() ) );
+      $h = new Amonite\HttpCode( 200, array( "success" => true, "count" => NavModel::count() ) );
 			$h->setMime( "application/json" );
-      return $h; //throw $h;
+    	throw $h;
 		}
 
 		function getComponent( Amonite\Request $req, Amonite\Response $res ) {
 
-			$n = new NavModel();
-      $rows = $n->select();
+			NavModel::insert( array("url" => "#/aze", "name" => "AZE!") );
+      $rows = NavModel::select();
 
 			?>
 

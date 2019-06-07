@@ -314,6 +314,22 @@ if( !function_exists( "file_basename" ) ) {
 	}
 }
 
+if( !\function_exists( "Amonite\\touch") ) {
+
+	/**
+	 * @function touch is overriden to permit create file without needs "execute"
+	 * 		permission, only "write".
+	 * @param string $filename
+	 * @return boolean created = true
+	 */
+
+	function touch( $filename ) {
+		$h = fopen($filename, "w");
+		fclose($h);
+		return $h !== false;
+	}
+}
+
 if( !function_exists( "to_string_field" ) ) {
 
 	/**
