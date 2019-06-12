@@ -21,8 +21,9 @@ if( !class_exists( "NavigationComponent" ) ) {
 
 		function getComponent( Amonite\Request $req, Amonite\Response $res ) {
 
-			NavModel::insert( array("url" => "#/aze", "name" => "AZE!") );
-      $rows = NavModel::select();
+      $rows = NavModel::select( function(&$result, $row) {
+				$result[] = $row;
+			});
 
 			?>
 

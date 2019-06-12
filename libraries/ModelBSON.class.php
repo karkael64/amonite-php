@@ -18,8 +18,8 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "select";
 			self::$last_counter = 0;
-			if( $fields instanceof Closure ) {
-				while( ( $row = self::getRow() ) and !call_user_func( $fields, $res, $row ) ) {}
+			if( $fields instanceof \Closure ) {
+				while( ( $row = self::getRow() ) and !call_user_func_array( $fields, array(&$res, $row) ) ) {}
 			}
 			else {
 				while( ( $row = self::getRow() ) and ( !$limit or ( $limit < count( $res ) ) ) ) {
@@ -40,9 +40,9 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "selectFirst";
 			self::$last_counter = 0;
-			if( $fields instanceof Closure ) {
+			if( $fields instanceof \Closure ) {
 				$res = null;
-				while( ( $row = self::getRow() ) and !call_user_func( $fields, $res, $row ) ) {}
+				while( ( $row = self::getRow() ) and !call_user_func_array( $fields, array(&$res, $row) ) and ($res === null) ) {}
 				return $res;
 			}
 			else {
@@ -69,7 +69,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "update";
 			self::$last_counter = 0;
-			if( $value instanceof Closure ) {
+			if( $value instanceof \Closure ) {
 				while( ( $row = self::getRow() ) and !call_user_func( $value, $res, $row ) ) {}
 			}
 			else {
@@ -95,7 +95,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 
 		static function insert( $value = array() ) {
 
-			if( $value instanceof Closure ) {
+			if( $value instanceof \Closure ) {
 				$result = array();
 				while( !( $res = call_user_func( $value ) ) ) {
 					$res[ self::ID ] = self::nextId();
@@ -138,7 +138,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 			self::startReading();
 			self::$last_method = "count";
 			self::$last_counter = 0;
-			if( $where instanceof Closure ) {
+			if( $where instanceof \Closure ) {
 				while( $row = self::getRow() ) {
 					if( call_user_func( $where, $row ) )
 						$res++;

@@ -24,7 +24,7 @@ if( !class_exists( "Amonite\\Request" ) ) {
 			elseif( isset( $_SERVER[ "REQUEST_URI" ] ) ) $file = $_SERVER[ "REQUEST_URI" ];
 			elseif( isset( $_SERVER[ "REDIRECT_URL" ] ) ) $file = $_SERVER[ "REDIRECT_URL" ];
 			else $file = $_SERVER[ "SCRIPT_NAME" ];
-			$file = preg_replace( '/\/\.\.\//', '/', preg_replace( '/\/$/', '/index.html', preg_replace( '/(\?|#).*$/', '', $file ) ) );
+			$file = rawurldecode( preg_replace( '/\/\.\.\//', '/', preg_replace( '/\/$/', '/index.html', preg_replace( '/(\?|#).*$/', '', $file ) ) ) );
 
 			$argc = is_integer( $argc ) ? $argc : 0;
 			$argv = is_array( $argv ) ? $argv : array();

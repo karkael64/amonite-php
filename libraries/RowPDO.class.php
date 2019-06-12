@@ -10,19 +10,14 @@ if( !class_exists( "Amonite\\RowPDO" ) ) {
 	class RowPDO extends ModelPDO implements Row {
 
 		protected $data;
-		const ENABLE = false;
-		const DISABLE = true;
-		const KEY_ENABLED = "removed";
 
 		function __construct( $id = array() ) {
 
 			if( is_numeric( $id ) ) {
 				$this->data = $this->selectFirst( null, array( self::ID => +$id, self::KEY_ENABLED => self::ENABLE ) );
-			}
-			elseif( is_array( $id ) ) {
+			} elseif( is_array( $id ) ) {
 				$this->data = $id;
-			}
-			else {
+			} else {
 				$this->data = array();
 			}
 		}
@@ -31,7 +26,6 @@ if( !class_exists( "Amonite\\RowPDO" ) ) {
 
 			if( is_array( $arr ) )
 				$this->data += $arr;
-			$this->data[ "date" ] = now_ms();
 
 			if( isset( $this->data[ self::ID ] )
 				and ( $d = self::update( $this->data, array( self::ID => $this->data[ self::ID ] ) ) )
@@ -45,9 +39,15 @@ if( !class_exists( "Amonite\\RowPDO" ) ) {
 			return $this;
 		}
 
+
+		const ENABLE = false;
+		const DISABLE = true;
+		const KEY_ENABLED = "removed";
+
 		public function disable() {
 
-			return $this->save( array( self::KEY_ENABLED => self::DISABLE ) );
+			$this->__set( self::KEY_ENABLED, self::DISABLE );
+			return $this->save();
 		}
 
 		public function __get( $name ) {
@@ -183,7 +183,7 @@ if( !class_exists( "Amonite\\RowPDO" ) ) {
 			$field = file_basename( get_called_class(), "Model" );
 			$id_field = "id_$field";
 
-			if( !class_exists( $name ) and class_exists( $name . "Model" ) )
+			if( class_exists( $name . "Model" ) )
 				$name .= "Model";
 
 			if( class_exists( $name ) and is_subclass_of( $name, get_class() ) ) {

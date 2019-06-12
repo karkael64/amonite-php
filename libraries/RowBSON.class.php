@@ -29,8 +29,7 @@ if( !class_exists( "Amonite\\RowBSON" ) ) {
 
 			if( isset( $this->data[ self::ID ] )
 				and ( $d = self::update( $this->data, array( self::ID => $this->data[ self::ID ] ) ) )
-				and isset( $d[ 0 ] )
-			)
+				and isset( $d[ 0 ] ) )
 				$d = $d[ 0 ];
 			else
 				$d = self::insert( $this->data );
@@ -67,7 +66,6 @@ if( !class_exists( "Amonite\\RowBSON" ) ) {
 			unset( $this->data[ $name ] );
 		}
 
-
 		public function toArray() {
 			return $this->data;
 		}
@@ -89,7 +87,6 @@ if( !class_exists( "Amonite\\RowBSON" ) ) {
 			}
 			return null;
 		}
-
 
 
 		function __call( $name, $args ) {
