@@ -63,7 +63,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 			return null;
 		}
 
-		static function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
+		static function update( $value = array(), $where = array(), $limit = 1, $start_at = 0 ) {
 			$res = array();
 			self::startWritingTemp();
 			self::startReading();
@@ -159,7 +159,7 @@ if( !class_exists( "Amonite\\ModelBSON" ) ) {
 			return $res;
 		}
 
-		static function remove( array $where, $limit = 0, $start_at = 0 ) {
+		static function remove( array $where, $limit = 1, $start_at = 0 ) {
 			$res = array();
 			self::startWritingTemp();
 			self::startReading();
