@@ -46,11 +46,8 @@ You can enhance the engine with Document / Component model or you can create any
 __File : /templates/documents/IndexDocument.php__
 ``` PHP
 <?php
-
-Amonite\Request::i()->env->components = ROOT . "/templates/components";
-Amonite\Request::getComponent( "Nav" );
-// OR
-// require_once ROOT . "/templates/components/NavComponent.php";
+require_once ROOT . "/templates/components/NavComponent.php";
+namespace App;
 
 class IndexDocument extends Amonite\Document {
   function getDocument( Amonite\Request $req, Amonite\Response $res ) {
@@ -71,15 +68,16 @@ class IndexDocument extends Amonite\Document {
 __File : /templates/components/NavComponent.php__
 ``` PHP
 <?php
+namespace App;
 
 class NavComponent extends Amonite\Component {
 
-  // called only if an argument (into $argv, $_FILES, $_GET, $_POST) equals "Nav"
+  // called only if an argument key (into $argv, $_FILES, $_GET, $_POST) is "Nav"
   function onCall( Request $req, Response $res ) {
     throw new HttpCode( 403 ); // Forbidden access
   }
 
-  // function called by $this->get() or $this->getContent()
+  // function called by $this->getContent()
   function getComponent( Amonite\Request $req, Amonite\Response $res ) {
     ?>
       <nav>
@@ -103,12 +101,7 @@ class NavComponent extends Amonite\Component {
 __File : /theme/main/index.html.php__
 ``` PHP
 <?php
-
-Amonite\Request::i()->env->documents = ROOT . "/theme/main";
-Amonite\Request::getDocument( "Index" );
-// OR
-// require_once ROOT . "/templates/documents/IndexDocument.php";
-
+namespace App;
 return new IndexDocument;
 
 ```
@@ -119,9 +112,9 @@ You can enhance the engine with ModelBSON / ModelPDO model or you can create any
 
 ``` PHP
 <?php
+namespace Amonite;
 
 interface Model {
-
   public function __construct( $name = "" );
   public function select( $fields = array(), $where = array(), $limit = 0, $start_at = 0 ); // return array of items
   public function selectFirst( $fields = array(), $where = array(), $start_at = 0 ); // return first items
