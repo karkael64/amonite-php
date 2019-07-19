@@ -71,7 +71,7 @@ if( !class_exists( "Amonite\\CustomException" ) ) {
 		static function set_error_handler( $error_types = E_ALL ) {
 			if( !self::isset_error_handler() ) {
 				self::$is_set_error = true;
-				return set_error_handler( array( "Exception", "error_handler" ), $error_types );
+				return set_error_handler( array( "Amonite\\CustomException", "error_handler" ), $error_types );
 			}
 			return false;
 		}
@@ -102,7 +102,7 @@ if( !class_exists( "Amonite\\CustomException" ) ) {
 			if( !self::$is_set_fatal ) {
 				self::$is_set_fatal = true;
 				ini_set( "display_errors", 0 );
-				register_shutdown_function( array( "Exception", "fatal_error_handler" ) );
+				register_shutdown_function( array( "Amonite\\CustomException", "fatal_error_handler" ) );
 			}
 		}
 
