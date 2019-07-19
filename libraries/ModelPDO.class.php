@@ -1,5 +1,4 @@
 <?php
-
 namespace Amonite;
 
 if( !class_exists( "Amonite\\ModelPDO" ) ) {
@@ -71,7 +70,7 @@ if( !class_exists( "Amonite\\ModelPDO" ) ) {
 		}
 
 
-		static public function remove( array $where, $limit = 0, $start_at = 0 ) {
+		static public function remove( array $where, $limit = 1, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $where ) ) {
@@ -86,7 +85,7 @@ if( !class_exists( "Amonite\\ModelPDO" ) ) {
 			return null;
 		}
 
-		static public function update( $value = array(), $where = array(), $limit = 0, $start_at = 0 ) {
+		static public function update( $value = array(), $where = array(), $limit = 1, $start_at = 0 ) {
 
 			$pdo = self::$pdo;
 			if( $pdo instanceof PDO && count( $value ) ) {
