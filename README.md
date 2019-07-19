@@ -17,11 +17,11 @@ Amonite is a good PHP engine :
 
 ### Why would you NOT use Amonite-PHP
 1. You need heavy control system,
-3. You don't trust your colleagues and
-2. Expensive tool are most qualitative.
+3. You don't trust your teammates and
+2. Expensive tools are most qualitative.
 
 ## Start with Amonite-PHP
-All Amonite engine is archived as a PHAR file. Put it on root, or any where : `/amonite.phar`
+Entire Amonite engine is archived as a PHAR file. Put it on root, or any where : `/amonite.phar`
 
 May be you would like use it with default config. Then just call it like :
 ``` PHP
@@ -30,18 +30,15 @@ May be you would like use it with default config. Then just call it like :
 // Get library
 require_once __DIR__ . "/amonite.phar";
 
+// Set file root
+Amonite\Response::i()->env->theme = __DIR__ . "/theme/main";
+
 // Execute anonymous function then send response
-Amonite\Response::send( function(){
-
-  // Set file root
-  Amonite\Response::i()->env->theme = __DIR__ . "/theme/main";
-
-  return Amonite\Controller::auto();
-});
+Amonite\Response::send(Amonite\Controller::auto());
 ```
 
 ## Enhance Amonite-PHP
-Amonite default config uses Throwable, Answerable, Request, Response and CustomException.
+Amonite default config uses Throwable, Answerable, Request, Response and CustomException. These classes helps you to produce better system in CraftmanShip approach. `Amonite\Response::send($value)` can send scalar values (integer, float, string or boolean) or array or any `Answerable` child class (`CustomException`, `Content`, `Document`, `Component`, `File` or `DownloadFile` Amonite classes available by default).
 
 ### Answerable file : Document / Component model
 You can enhance the engine with Document / Component model or you can create any class that extends `Content` class or implements `Answerable` interface. In example :
